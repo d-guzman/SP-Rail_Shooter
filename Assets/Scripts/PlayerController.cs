@@ -17,6 +17,13 @@ public class PlayerController : MonoBehaviour {
 
     void Update()
     {
+        movePlayer_AsChild();
+    }
+
+    //Private Functions
+
+    // This function works for moving the player around without making them a child of the main camera, but that comes with some visual quirks.
+    private void movePlayer_NotChild() {
         moveHori = Input.GetAxis("Horizontal");
         moveVert = Input.GetAxis("Vertical");
 
@@ -34,11 +41,28 @@ public class PlayerController : MonoBehaviour {
 
         nextPos = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f));
         Vector3 lerpedPos = Vector3.Lerp(transform.position, nextPos, moveSpeed);
+
+        transform.rotation = mainCam.transform.rotation;
         transform.position = lerpedPos;
     }
 
-    //Private Functions
-    private void movePlayer() {
-        // Put movement code from Update in here.
+    // haven't figured out how to rotate the ship with this, which makes the design of the game a bit more difficult.
+    private void movePlayer_AsChild()
+    {
+        moveHori = Input.GetAxis("Horizontal");
+        moveVert = Input.GetAxis("Vertical");
+
+        Vector3 nextPos = transform.localPosition + new Vector3(moveHori, moveVert).normalized;
+        transform.LookAt(nextPos);      // ROTATION WAS THIS SIMPLE AGHGHGHAGHAGH
+
+        // Viewport Clamping code - Keeps the ship in the camera at all times.
+        Vector3 viewportPos = mainCam.WorldToViewportPoint(transform.TransformPoint(nextPos));
+        float viewX = Mathf.Clamp(viewportPos.x, .1f, .9f);
+        float viewY = Mathf.Clamp(viewportPos.y, .1f, .9f);
+
+        nextPos = transform.InverseTransformPoint(mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, viewportPos.z)));
+        Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, moveSpeed);
+        lerpedPos.Set(lerpedPos.x, lerpedPos.y, 10f);
+        transform.localPosition = lerpedPos;
     }
 }
