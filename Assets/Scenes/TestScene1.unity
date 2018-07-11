@@ -716,7 +716,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  moveSpeed: 12.5
+  moveSpeed: 11.5
+  lookAtDist: 11.5
   bulletDamage: 10
   fireRate: 0.2
   weaponLevel: 1
