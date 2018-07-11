@@ -3,22 +3,55 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
+    private Camera mainCam;
+
+    [Header("Player Stats")]
+    [Tooltip("How much damage the player's ship can take before they die.")]
     public int health = 100;
-    [Range(0f, .5f)]
-    public float moveSpeed = .2f;
+    [Range(10f, 15f)]
+    [Tooltip("How fast the player's ship can move")]
+    public float moveSpeed = 12.5f;
     private float moveHori;
     private float moveVert;
+    [Tooltip("How strong the player's bullets are.")]
+    public int bulletDamage = 10;
 
-    private Camera mainCam;
+    [Header("Weapon Related")]
+    [Range(.1f, 1f)]
+    [Tooltip("How fast the can player's ship can fire its weapons.")]
+    public float fireRate = .3f;
+    private bool canFire = true;
+    [Range(1,3)]
+    [Tooltip("The current level of the player's weapons. Higher level means more guns.")]    
+    public int weaponLevel = 1;
+    public GameObject bulletPrefab;
+    // Index 2: Level 1 Gun. Index 0 & 1: Level 2+ Guns
+    public GameObject[] bulletSpawnLocations;
 
     void Start() {
         mainCam = Camera.main;
+        if (bulletSpawnLocations.Length == 0) {
+            bulletSpawnLocations = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
+            if (weaponLevel == 1)
+            {
+                bulletSpawnLocations[0].SetActive(false);
+                bulletSpawnLocations[1].SetActive(false);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
+                bulletSpawnLocations[1].transform.parent.gameObject.SetActive(false);
+            }
+            else if (weaponLevel == 2 || weaponLevel == 3)
+            {
+                bulletSpawnLocations[2].SetActive(false);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
+            }
+        }
     }
 
     void Update()
     {
         //movePlayer_NotChild();
         movePlayer_AsChild();
+        shoot();
     }
 
     //Private Functions
@@ -76,12 +109,47 @@ public class PlayerController : MonoBehaviour {
         transform.localRotation = Quaternion.Euler(rot);
         */
 
-
         nextPos = transform.InverseTransformPoint(mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, viewportPos.z)));
-        Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, moveSpeed);
+        Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, moveSpeed * Time.deltaTime);
         lerpedPos.Set(lerpedPos.x, lerpedPos.y, 10f);
         transform.localPosition = lerpedPos;
+    }
 
+    private void shoot() {
+        if (Input.GetAxis("Shoot") == 1 && canFire)
+        {
+            GameObject[] bulletRefs = new GameObject[2];
+            switch (weaponLevel)
+            {
+                case 1:
+                    StartCoroutine(shootWait());
+                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
+                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    break;
+                case 2:
+                    StartCoroutine(shootWait());
+                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[1] = Instantiate(bulletPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[1].transform.parent.rotation);
 
+                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    bulletRefs[1].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    break;
+                case 3:
+                    StartCoroutine(shootWait());
+                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[1] = Instantiate(bulletPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+
+                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    bulletRefs[1].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    break;
+            }
+        }
+    }
+
+    // Coroutines!
+    IEnumerator shootWait() {
+        canFire = false;
+        yield return new WaitForSeconds(fireRate);
+        canFire = true;
     }
 }
