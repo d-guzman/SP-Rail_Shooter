@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
+[RequireComponent(typeof(AudioSource))]
 public class BulletScript : MonoBehaviour {
     private Rigidbody bulletRB;
     public float bulletSpeed = 100f;
@@ -11,10 +13,19 @@ public class BulletScript : MonoBehaviour {
     private bool timerStarted = false;
     private bool hitLevel = false;
 
-    void Start()
+    private AudioSource soundSource;
+
+    // Unity Functions
+    void Awake()
     {
         if (bulletRB == null)
+        {
             bulletRB = GetComponent<Rigidbody>();
+        }
+        if (soundSource == null)
+        {
+            soundSource = GetComponent<AudioSource>();
+        }
     }
 
     void Update()
@@ -22,7 +33,6 @@ public class BulletScript : MonoBehaviour {
         if (!hitLevel)
         {
             transform.position += (transform.up * bulletSpeed) * Time.deltaTime;
-            //bulletRB.MovePosition(transform.position + (transform.up * bulletSpeed) * Time.deltaTime);
         }
         if (timerStarted == false)
         {
@@ -44,6 +54,16 @@ public class BulletScript : MonoBehaviour {
         }
     }
 
+    // Public Functions
+    public void bulletSetup(int damage, AudioClip shootSound, float soundVolume)
+    {
+        bulletDamage = damage;
+        soundSource.clip = shootSound;
+        soundSource.volume = soundVolume;
+        soundSource.Play();
+    }
+
+    // Coroutines
     IEnumerator destroySelf()
     {
         timerStarted = true;

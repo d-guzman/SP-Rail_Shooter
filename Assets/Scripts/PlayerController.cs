@@ -26,10 +26,15 @@ public class PlayerController : MonoBehaviour {
     [Range(1,3)]
     [Tooltip("The current level of the player's weapons. Higher level means more guns.")]    
     public int weaponLevel = 1;
-    public GameObject bulletPrefab;
+    private bool reachedMax;
+    public GameObject basicLaserPrefab;
+    public GameObject maxLaserPrefab;
     // Index 2: Level 1 Gun. Index 0 & 1: Level 2+ Guns
     public GameObject[] bulletSpawnLocations;
+    // index 0: basic | index 1: twin | index 2: max
+    public AudioClip[] shootingSounds;
 
+    // Unity Functions
     void Start() {
         mainCam = Camera.main;
         if (bulletSpawnLocations.Length == 0) {
@@ -57,8 +62,17 @@ public class PlayerController : MonoBehaviour {
         shoot();
     }
 
-    //Private Functions
+    public void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "WeaponUpgrade")
+        {
+            if (weaponLevel != 3)
+                weaponLevel++;
+            Destroy(other.gameObject);
+        }
+    }
 
+    //Private Functions
     // This function works for moving the player around without making them a child of the main camera, but that comes with some visual quirks.
     private void movePlayer_NotChild() {
         moveHori = Input.GetAxis("Horizontal");
@@ -130,24 +144,24 @@ public class PlayerController : MonoBehaviour {
             {
                 case 1:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
-                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
+                    bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[0], 1f);
                     break;
                 case 2:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
-                    bulletRefs[1] = Instantiate(bulletPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[1].transform.parent.rotation);
+                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[1] = Instantiate(basicLaserPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[1].transform.parent.rotation);
 
-                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
-                    bulletRefs[1].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[1], .6f);
+                    bulletRefs[1].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[1], .6f);
                     break;
                 case 3:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(bulletPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
-                    bulletRefs[1] = Instantiate(bulletPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[0] = Instantiate(maxLaserPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[1] = Instantiate(maxLaserPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
 
-                    bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
-                    bulletRefs[1].GetComponent<BulletScript>().bulletDamage = bulletDamage;
+                    bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[2], .6f);
+                    bulletRefs[1].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[2], .6f);
                     break;
             }
         }
@@ -158,7 +172,8 @@ public class PlayerController : MonoBehaviour {
         {
             if (bulletSpawnLocations[2].activeSelf == false && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == false)
             {
-                Debug.Log("Going to Weapon Level 1.");
+                if (bulletDamage != 10)
+                    bulletDamage = 10;
                 bulletSpawnLocations[0].SetActive(false);
                 bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
 
@@ -168,12 +183,17 @@ public class PlayerController : MonoBehaviour {
                 bulletSpawnLocations[2].SetActive(true);
                 bulletSpawnLocations[2].transform.parent.gameObject.SetActive(true);
             }
+            // Safety code. ERASE WHEN WEAPON UPGRADES ARE PROPERLY IMPLEMENTED.
+            if (reachedMax)
+            {
+                bulletDamage = 10;
+                reachedMax = false;
+            }
         }
         else if (weaponLevel == 2)
         {
             if (bulletSpawnLocations[2].activeSelf == true && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == true)
             {
-                Debug.Log("Going to Weapon Level 2.");
                 bulletSpawnLocations[0].SetActive(true);
                 bulletSpawnLocations[0].transform.parent.gameObject.SetActive(true);
 
@@ -182,6 +202,23 @@ public class PlayerController : MonoBehaviour {
 
                 bulletSpawnLocations[2].SetActive(false);
                 bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
+            }
+
+            // Safety code. ERASE WHEN WEAPON UPGRADES ARE PROPERLY IMPLEMENTED.
+            if (reachedMax)
+            {
+                bulletDamage = 10;
+                reachedMax = false;
+            }
+        }
+
+        // Safety code. ERASE WHEN WEAPON UPGRADES ARE PROPERLY IMPLEMENTED.
+        else if (weaponLevel == 3)
+        {
+            if (!reachedMax)
+            {
+                reachedMax = true;
+                bulletDamage = 15;
             }
         }
     }
