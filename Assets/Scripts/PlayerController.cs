@@ -52,6 +52,7 @@ public class PlayerController : MonoBehaviour {
     void Update()
     {
         //movePlayer_NotChild();
+        checkWeapons();
         movePlayer_AsChild();
         shoot();
     }
@@ -148,6 +149,39 @@ public class PlayerController : MonoBehaviour {
                     bulletRefs[0].GetComponent<BulletScript>().bulletDamage = bulletDamage;
                     bulletRefs[1].GetComponent<BulletScript>().bulletDamage = bulletDamage;
                     break;
+            }
+        }
+    }
+
+    private void checkWeapons() {
+        if (weaponLevel == 1)
+        {
+            if (bulletSpawnLocations[2].activeSelf == false && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == false)
+            {
+                Debug.Log("Going to Weapon Level 1.");
+                bulletSpawnLocations[0].SetActive(false);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
+
+                bulletSpawnLocations[1].SetActive(false);
+                bulletSpawnLocations[1].transform.parent.gameObject.SetActive(false);
+
+                bulletSpawnLocations[2].SetActive(true);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(true);
+            }
+        }
+        else if (weaponLevel == 2)
+        {
+            if (bulletSpawnLocations[2].activeSelf == true && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == true)
+            {
+                Debug.Log("Going to Weapon Level 2.");
+                bulletSpawnLocations[0].SetActive(true);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(true);
+
+                bulletSpawnLocations[1].SetActive(true);
+                bulletSpawnLocations[1].transform.parent.gameObject.SetActive(true);
+
+                bulletSpawnLocations[2].SetActive(false);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
             }
         }
     }

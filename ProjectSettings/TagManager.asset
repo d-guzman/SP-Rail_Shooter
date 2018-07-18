@@ -6,6 +6,7 @@ TagManager:
   tags:
   - PlayerLaser
   - BulletSpawn_Player
+  - Level
   layers:
   - Default
   - TransparentFX
