@@ -8,6 +8,7 @@ TagManager:
   - BulletSpawn_Player
   - Level
   - WeaponUpgrade
+  - Interactable
   layers:
   - Default
   - TransparentFX

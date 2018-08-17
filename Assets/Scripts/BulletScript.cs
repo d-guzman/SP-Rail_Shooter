@@ -44,13 +44,13 @@ public class BulletScript : MonoBehaviour {
     {
         if (other.gameObject.tag == "Level")
         {
-            hitLevel = true;
-            gameObject.GetComponent<CapsuleCollider>().enabled = false;
-            MeshRenderer[] childMeshes = gameObject.GetComponentsInChildren<MeshRenderer>();
-            foreach (MeshRenderer mesh in childMeshes)
-            {
-                mesh.enabled = false;
-            }
+            onCollide();
+        }
+
+        else if (other.gameObject.tag == "Interactable")
+        {
+            other.gameObject.GetComponent<DoorScript>().hitByPlayer = true;
+            onCollide();
         }
     }
 
@@ -63,6 +63,17 @@ public class BulletScript : MonoBehaviour {
         soundSource.Play();
     }
 
+    //Private Funtions
+    private void onCollide()
+    {
+        hitLevel = true;
+        gameObject.GetComponent<CapsuleCollider>().enabled = false;
+        MeshRenderer[] childMeshes = gameObject.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer mesh in childMeshes)
+        {
+            mesh.enabled = false;
+        }
+    }
     // Coroutines
     IEnumerator destroySelf()
     {
