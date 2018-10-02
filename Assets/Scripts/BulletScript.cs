@@ -47,6 +47,12 @@ public class BulletScript : MonoBehaviour {
             onCollide();
         }
 
+        else if (other.gameObject.tag == "EnemyShip")
+        {
+            onCollide();
+            Destroy(other.transform.parent.gameObject);
+        }
+
         else if (other.gameObject.tag == "Interactable")
         {
             other.gameObject.GetComponent<DoorScript>().hitByPlayer = true;
@@ -74,6 +80,7 @@ public class BulletScript : MonoBehaviour {
             mesh.enabled = false;
         }
     }
+
     // Coroutines
     IEnumerator destroySelf()
     {

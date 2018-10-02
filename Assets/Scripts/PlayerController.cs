@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
     private Camera mainCam;
+    private Vector3 bumperRotation = new Vector3();
+    private float bumperRotateSpeed = .1f;
 
     [Header("Player Stats")]
     [Tooltip("How much damage the player's ship can take before they die.")]
@@ -69,6 +71,11 @@ public class PlayerController : MonoBehaviour {
             if (weaponLevel != 3)
                 weaponLevel++;
             Destroy(other.gameObject);
+        }
+
+        if (other.tag == "EnemyLoad")
+        {
+            other.GetComponent<EnemyLoadingScript>().LoadEnemies();
         }
     }
 
@@ -137,7 +144,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     private void shoot() {
-        if (Input.GetAxis("Shoot") == 1 && canFire)
+        if (Input.GetButtonDown("Shoot") && canFire)
         {
             GameObject[] bulletRefs = new GameObject[2];
             switch (weaponLevel)

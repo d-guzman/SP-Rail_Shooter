@@ -9,6 +9,8 @@ TagManager:
   - Level
   - WeaponUpgrade
   - Interactable
+  - EnemyShip
+  - EnemyLoad
   layers:
   - Default
   - TransparentFX
