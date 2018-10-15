@@ -4,8 +4,10 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
     private Camera mainCam;
-    private Vector3 bumperRotation = new Vector3();
-    private float bumperRotateSpeed = .1f;
+    public Transform childMesh;
+    private Vector3 maxLRotation = new Vector3(0f, 0f, 90f);
+    private Vector3 maxRRotation = new Vector3(0f, 0f, 270f);
+    private float bumperRotateSpeed = .2f;
 
     [Header("Player Stats")]
     [Tooltip("How much damage the player's ship can take before they die.")]
@@ -21,6 +23,7 @@ public class PlayerController : MonoBehaviour {
     public int bulletDamage = 10;
 
     [Header("Weapon Related")]
+    public Transform reticle;
     [Range(.1f, 1f)]
     [Tooltip("How fast the can player's ship can fire its weapons.")]
     public float fireRate = .3f;
@@ -39,6 +42,7 @@ public class PlayerController : MonoBehaviour {
     // Unity Functions
     void Start() {
         mainCam = Camera.main;
+        //childMesh = transform.GetComponentInChildren<Transform>();
         if (bulletSpawnLocations.Length == 0) {
             bulletSpawnLocations = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
             if (weaponLevel == 1)
@@ -79,40 +83,44 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    //Private Functions
-    // This function works for moving the player around without making them a child of the main camera, but that comes with some visual quirks.
-    private void movePlayer_NotChild() {
-        moveHori = Input.GetAxis("Horizontal");
-        moveVert = Input.GetAxis("Vertical");
+    ////Private Functions
+    //// This function works for moving the player around without making them a child of the main camera, but that comes with some visual quirks.
+    //private void movePlayer_NotChild() {
+    //    moveHori = Input.GetAxis("Horizontal");
+    //    moveVert = Input.GetAxis("Vertical");
 
-        // Code to keep ship moving correctly within the camera viewport.
-        Vector3 camUp = mainCam.transform.up;
-        Vector3 camRight = mainCam.transform.right;
-        camUp.x = 0f;
-        camRight.y = 0f;
-        Vector3 nextPos = transform.position + (camRight * moveHori + camUp * moveVert).normalized;
+    //    // Code to keep ship moving correctly within the camera viewport.
+    //    Vector3 camUp = mainCam.transform.up;
+    //    Vector3 camRight = mainCam.transform.right;
+    //    camUp.x = 0f;
+    //    camRight.y = 0f;
+    //    Vector3 nextPos = transform.position + (camRight * moveHori + camUp * moveVert).normalized;
 
-        // Viewport Clamping code - Keeps the ship in the camera at all times.
-        Vector3 viewportPos = mainCam.WorldToViewportPoint(nextPos);
-        float viewX = Mathf.Clamp(viewportPos.x, .1f, .9f);
-        float viewY = Mathf.Clamp(viewportPos.y, .1f, .9f);
+    //    // Viewport Clamping code - Keeps the ship in the camera at all times.
+    //    Vector3 viewportPos = mainCam.WorldToViewportPoint(nextPos);
+    //    float viewX = Mathf.Clamp(viewportPos.x, .1f, .9f);
+    //    float viewY = Mathf.Clamp(viewportPos.y, .1f, .9f);
 
-        nextPos = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f));
-        Vector3 lerpedPos = Vector3.Lerp(transform.position, nextPos, moveSpeed);
+    //    nextPos = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f));
+    //    Vector3 lerpedPos = Vector3.Lerp(transform.position, nextPos, moveSpeed);
 
-        transform.rotation = mainCam.transform.rotation;
-        transform.position = lerpedPos;
-    }
+    //    transform.rotation = mainCam.transform.rotation;
+    //    transform.position = lerpedPos;
+    //}
 
     // haven't figured out how to rotate the ship with this, which makes the design of the game a bit more difficult.
     private void movePlayer_AsChild()
     {
         moveHori = Input.GetAxis("Horizontal");
         moveVert = Input.GetAxis("Vertical");
+        float rotateValue = Input.GetAxis("Rotate");
 
         Vector3 movement = new Vector3(moveHori, moveVert);
         if (movement.magnitude > 1)
             movement.Normalize();
+
+        if (moveHori != 0f)
+            movement += new Vector3(-rotateValue/3.5f, 0f, 0f);          // If the player is rotating, they move faster in the direction they are rotating towards.
 
         Vector3 nextPos = transform.localPosition + movement;
 
@@ -121,8 +129,60 @@ public class PlayerController : MonoBehaviour {
         float viewX = Mathf.Clamp(viewportPos.x, 0.0f, 1f);
         float viewY = Mathf.Clamp(viewportPos.y, 0.0f, 1f);
 
-        // This apparently works even though earlier testing showed that it didn't.
+        // ROTATION CODE
+        // First, we check if the player is pressing any of the rotate buttons.
+        // If they are, rotate in that direction. Otherwise, the ship levels out.
+        // Second, we rotate the player ship to look towards the direction the
+        // player is moving in.
+        if (rotateValue == -1)
+        {
+            if (childMesh.localRotation.eulerAngles.z > 270.5f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, maxRRotation, bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+            }
+            else if (childMesh.localRotation.eulerAngles.z < 90.5f && childMesh.localRotation.eulerAngles.z > 20f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, Vector3.zero, bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+            }
+            else if (childMesh.localRotation.eulerAngles.z <= 20f)
+                childMesh.localRotation = Quaternion.Euler(0f, 0f, 358.5f);
+        }
+        else if (rotateValue == 1)
+        {
+            if (childMesh.localEulerAngles.z < 90.5f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, maxLRotation, bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+            }
+            else if (childMesh.localEulerAngles.z > 269.5f && childMesh.localEulerAngles.z < 340f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, new Vector3(0f, 0f, 360f), bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+            }
+            else if (childMesh.localEulerAngles.z >= 340f)
+                childMesh.localRotation = Quaternion.Euler(0f, 0f, 1.5f);
+        }
+        else
+        {
+            if (childMesh.localEulerAngles.z > 269.5f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, new Vector3(0f, 0f, 360f), bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+                if (childMesh.localEulerAngles.z > 359.5f)
+                    childMesh.localRotation = Quaternion.Euler(Vector3.zero);
+            }
+            else if (childMesh.localEulerAngles.z < 90.5f)
+            {
+                Vector3 meshRotation = Vector3.Lerp(childMesh.localRotation.eulerAngles, Vector3.zero, bumperRotateSpeed);
+                childMesh.localRotation = Quaternion.Euler(meshRotation);
+            }
+        }
+
         Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * lookAtDist;
+        Vector3 reticlePoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori * 9 + mainCam.transform.up * moveVert * 9) + mainCam.transform.forward * (lookAtDist * 2f);
+        reticle.position = reticlePoint;
         transform.LookAt(lookAtPoint);
 
         //I don't know what problem I was trying to solve here, but i wasted a lot of time on it. Maybe could be used in movement as not a child object.

@@ -1,0 +1,5 @@
+To make the ship rotate like in StairFax, rotate the body mesh.
+
+That way, you can rotate the colliders and the mesh, without making the ship
+
+movement look all fucky and floppy like a fish.
