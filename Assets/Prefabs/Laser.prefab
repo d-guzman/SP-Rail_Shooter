@@ -201,7 +201,7 @@ Rigidbody:
   m_AngularDrag: 0
   m_UseGravity: 0
   m_IsKinematic: 1
-  m_Interpolate: 1
+  m_Interpolate: 2
   m_Constraints: 112
   m_CollisionDetection: 1
 --- !u!82 &82604241759827764
@@ -310,7 +310,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9f7218c0e1e7104996da6955d922aa0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  bulletSpeed: 400
+  bulletSpeed: 500
   duration: 2
   bulletDamage: 0
 --- !u!136 &136431134401527562

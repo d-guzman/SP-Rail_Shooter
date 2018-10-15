@@ -28,11 +28,12 @@ public class BulletScript : MonoBehaviour {
         }
     }
 
-    void Update()
+    void FixedUpdate()
     {
         if (!hitLevel)
         {
-            transform.position += (transform.up * bulletSpeed) * Time.deltaTime;
+            //transform.position += (transform.up * bulletSpeed) * Time.deltaTime;
+            bulletRB.MovePosition(transform.position + (transform.up * bulletSpeed) * Time.deltaTime);
         }
         if (timerStarted == false)
         {

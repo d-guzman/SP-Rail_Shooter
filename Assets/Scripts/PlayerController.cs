@@ -116,6 +116,8 @@ public class PlayerController : MonoBehaviour {
         float rotateValue = Input.GetAxis("Rotate");
 
         Vector3 movement = new Vector3(moveHori, moveVert);
+        reticle.localPosition = new Vector3(0f, 0f, 35f) + movement;
+
         if (movement.magnitude > 1)
             movement.Normalize();
 
@@ -181,8 +183,8 @@ public class PlayerController : MonoBehaviour {
         }
 
         Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * lookAtDist;
-        Vector3 reticlePoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori * 9 + mainCam.transform.up * moveVert * 9) + mainCam.transform.forward * (lookAtDist * 2f);
-        reticle.position = reticlePoint;
+        //Vector3 reticlePoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori * 9 + mainCam.transform.up * moveVert * 9) + mainCam.transform.forward * (lookAtDist * 2f);
+        //reticle.position = reticlePoint;
         transform.LookAt(lookAtPoint);
 
         //I don't know what problem I was trying to solve here, but i wasted a lot of time on it. Maybe could be used in movement as not a child object.
