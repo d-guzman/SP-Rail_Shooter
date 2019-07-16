@@ -34,7 +34,8 @@ public class PlayerController : MonoBehaviour {
     private bool reachedMax;
     public GameObject basicLaserPrefab;
     public GameObject maxLaserPrefab;
-    // Index 2: Level 1 Gun. Index 0 & 1: Level 2+ Guns
+    // UNITY 2018: Index 2: Level 1 Gun. Index 0 & 1: Level 2+ Guns
+    // UNITY 2019: Index 0: Level 1 Gun. Index 1 & 2: Level 2+ Guns.
     public GameObject[] bulletSpawnLocations;
     // index 0: basic | index 1: twin | index 2: max
     public AudioClip[] shootingSounds;
@@ -47,15 +48,15 @@ public class PlayerController : MonoBehaviour {
             bulletSpawnLocations = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
             if (weaponLevel == 1)
             {
-                bulletSpawnLocations[0].SetActive(false);
+                bulletSpawnLocations[2].SetActive(false);
                 bulletSpawnLocations[1].SetActive(false);
-                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
                 bulletSpawnLocations[1].transform.parent.gameObject.SetActive(false);
             }
             else if (weaponLevel == 2 || weaponLevel == 3)
             {
-                bulletSpawnLocations[2].SetActive(false);
-                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
+                bulletSpawnLocations[0].SetActive(false);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
             }
         }
     }
@@ -213,12 +214,12 @@ public class PlayerController : MonoBehaviour {
             {
                 case 1:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
+                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
                     bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[0], 1f);
                     break;
                 case 2:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[0] = Instantiate(basicLaserPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
                     bulletRefs[1] = Instantiate(basicLaserPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[1].transform.parent.rotation);
 
                     bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[1], .6f);
@@ -226,8 +227,8 @@ public class PlayerController : MonoBehaviour {
                     break;
                 case 3:
                     StartCoroutine(shootWait());
-                    bulletRefs[0] = Instantiate(maxLaserPrefab, bulletSpawnLocations[0].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
-                    bulletRefs[1] = Instantiate(maxLaserPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[0].transform.parent.rotation);
+                    bulletRefs[0] = Instantiate(maxLaserPrefab, bulletSpawnLocations[2].transform.position, bulletSpawnLocations[2].transform.parent.rotation);
+                    bulletRefs[1] = Instantiate(maxLaserPrefab, bulletSpawnLocations[1].transform.position, bulletSpawnLocations[1].transform.parent.rotation);
 
                     bulletRefs[0].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[2], .6f);
                     bulletRefs[1].GetComponent<BulletScript>().bulletSetup(bulletDamage, shootingSounds[2], .6f);
@@ -239,18 +240,18 @@ public class PlayerController : MonoBehaviour {
     private void checkWeapons() {
         if (weaponLevel == 1)
         {
-            if (bulletSpawnLocations[2].activeSelf == false && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == false)
+            if (bulletSpawnLocations[0].activeSelf == false && bulletSpawnLocations[0].transform.parent.gameObject.activeSelf == false)
             {
                 if (bulletDamage != 10)
                     bulletDamage = 10;
-                bulletSpawnLocations[0].SetActive(false);
-                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
+                bulletSpawnLocations[2].SetActive(false);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
 
                 bulletSpawnLocations[1].SetActive(false);
                 bulletSpawnLocations[1].transform.parent.gameObject.SetActive(false);
 
-                bulletSpawnLocations[2].SetActive(true);
-                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(true);
+                bulletSpawnLocations[0].SetActive(true);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(true);
             }
             // Safety code. ERASE WHEN WEAPON UPGRADES ARE PROPERLY IMPLEMENTED.
             if (reachedMax)
@@ -261,16 +262,16 @@ public class PlayerController : MonoBehaviour {
         }
         else if (weaponLevel == 2)
         {
-            if (bulletSpawnLocations[2].activeSelf == true && bulletSpawnLocations[2].transform.parent.gameObject.activeSelf == true)
+            if (bulletSpawnLocations[0].activeSelf == true && bulletSpawnLocations[0].transform.parent.gameObject.activeSelf == true)
             {
-                bulletSpawnLocations[0].SetActive(true);
-                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(true);
+                bulletSpawnLocations[2].SetActive(true);
+                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(true);
 
                 bulletSpawnLocations[1].SetActive(true);
                 bulletSpawnLocations[1].transform.parent.gameObject.SetActive(true);
 
-                bulletSpawnLocations[2].SetActive(false);
-                bulletSpawnLocations[2].transform.parent.gameObject.SetActive(false);
+                bulletSpawnLocations[0].SetActive(false);
+                bulletSpawnLocations[0].transform.parent.gameObject.SetActive(false);
             }
 
             // Safety code. ERASE WHEN WEAPON UPGRADES ARE PROPERLY IMPLEMENTED.
