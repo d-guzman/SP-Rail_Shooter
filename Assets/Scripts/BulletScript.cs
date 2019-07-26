@@ -5,7 +5,11 @@ using UnityEngine;
 [RequireComponent(typeof(Rigidbody))]
 [RequireComponent(typeof(AudioSource))]
 public class BulletScript : MonoBehaviour {
-    private Rigidbody bulletRB;
+    [Header("Important Components")]
+    public Rigidbody bulletRB;
+    public AudioSource soundSource;
+
+    [Header("Bullet Data")]
     public float bulletSpeed = 100f;
     public float duration = 2f;
     public int bulletDamage;
@@ -13,40 +17,32 @@ public class BulletScript : MonoBehaviour {
     private bool timerStarted = false;
     private bool hitLevel = false;
 
-    private AudioSource soundSource;
-
     // Unity Functions
     void Awake()
     {
+        /*
         if (bulletRB == null)
-        {
             bulletRB = GetComponent<Rigidbody>();
-        }
+
         if (soundSource == null)
-        {
             soundSource = GetComponent<AudioSource>();
-        }
+        */
     }
 
     void FixedUpdate()
     {
         if (!hitLevel)
-        {
-            //transform.position += (transform.up * bulletSpeed) * Time.deltaTime;
             bulletRB.MovePosition(transform.position + (transform.up * bulletSpeed) * Time.deltaTime);
-        }
+
         if (timerStarted == false)
-        {
             StartCoroutine(destroySelf());
-        }
+        
     }
 
     public void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "Level")
-        {
             onCollide();
-        }
 
         else if (other.gameObject.tag == "EnemyShip")
         {
@@ -77,9 +73,7 @@ public class BulletScript : MonoBehaviour {
         gameObject.GetComponent<CapsuleCollider>().enabled = false;
         MeshRenderer[] childMeshes = gameObject.GetComponentsInChildren<MeshRenderer>();
         foreach (MeshRenderer mesh in childMeshes)
-        {
             mesh.enabled = false;
-        }
     }
 
     // Coroutines
