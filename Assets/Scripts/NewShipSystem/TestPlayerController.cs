@@ -7,6 +7,7 @@ public class TestPlayerController : MonoBehaviour
 {
     public PlayerShipData shipData;
     public int WeaponLevel = 1;
+    private GameObject currentShip;
 
     void Start()
     {
@@ -14,8 +15,8 @@ public class TestPlayerController : MonoBehaviour
         // RESPECTIVE EVENTS IN THE SCRIPTABLE OBJECT!
         // Is this the best way to do this? Probably not. Instead the script should
         // probably do this instead. If doing that would work, delete this code!
-        GameObject temp = Instantiate(shipData.ShipModel, transform, false);
-        PlayerShipInterface tempInterface = temp.GetComponent<PlayerShipInterface>();
+        currentShip = Instantiate(shipData.ShipModel, transform, false);
+        PlayerShipInterface tempInterface = currentShip.GetComponent<PlayerShipInterface>();
         shipData.ShootFunction.AddListener(tempInterface.ShootWeapons);
         shipData.UpdateFunction.AddListener(tempInterface.UpdateWeapons);
         shipData.UpdateFunction.Invoke(WeaponLevel);

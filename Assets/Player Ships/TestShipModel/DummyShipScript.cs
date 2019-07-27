@@ -12,7 +12,8 @@ public class DummyShipScript : MonoBehaviour, PlayerShipInterface
         shootPoints = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
     }
 
-    public void UpdateWeapons(int weaponLevel) {
+    public void UpdateWeapons(int weaponLevel)
+    {
         switch (weaponLevel)
         {
             case 1:

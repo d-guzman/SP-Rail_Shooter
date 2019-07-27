@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0d56456c6b2b04882638c9a3925cc4, type: 3}
+  m_Name: TestShip2
+  m_EditorClassIdentifier: 
+  ShipModel: {fileID: 7981322447428763001, guid: d03bc69479e186f4cb6731a8b82d62f2,
+    type: 3}
+  ShipHealth: 0
+  ShipEnergy: 0
+  ShipSpeed: 0
+  BaseBullet: {fileID: 5422477816337664186, guid: 2162934f9202ead4cb370850a856b7c8,
+    type: 3}
+  MaxBullet: {fileID: 8330066392514304643, guid: 8c8f368195cde564b9fc672b47240eed,
+    type: 3}
+  ShootingSounds:
+  - {fileID: 8300000, guid: 48df88dc58e66d24185a528a4afa5c2e, type: 3}
+  - {fileID: 8300000, guid: 405bd0f4c6dceee488cc8a2d4613a58a, type: 3}
+  UpdateFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UpdateWeaponEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
+      PublicKeyToken=null
+  ShootFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: ShootEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+  ChargeFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BumperFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
