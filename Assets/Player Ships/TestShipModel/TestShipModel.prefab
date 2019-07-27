@@ -137,6 +137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 7742019355349374771}
   - component: {fileID: 6142262764874751842}
+  - component: {fileID: 5279041687118444699}
   m_Layer: 9
   m_Name: TestShipModel
   m_TagString: Player
@@ -175,6 +176,19 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 3
+--- !u!114 &5279041687118444699
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3862384520167706820}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d7bdeb24aa861d040a78f045a3a740d2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  shipData: {fileID: 11400000, guid: 1e3bb6dfaf7268a4ca45875f3470c20e, type: 2}
 --- !u!1 &4485436911754454722
 GameObject:
   m_ObjectHideFlags: 0
@@ -264,7 +278,7 @@ GameObject:
   - component: {fileID: 3534638383614319489}
   m_Layer: 9
   m_Name: L2_BulletSpawnR
-  m_TagString: Untagged
+  m_TagString: BulletSpawn_Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -559,7 +573,7 @@ GameObject:
   - component: {fileID: 4364820369182205829}
   m_Layer: 9
   m_Name: L2_BulletSpawnL
-  m_TagString: Untagged
+  m_TagString: BulletSpawn_Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -743,7 +757,7 @@ GameObject:
   - component: {fileID: 8532692805713427455}
   m_Layer: 9
   m_Name: L1_BulletSpawn
-  m_TagString: Untagged
+  m_TagString: BulletSpawn_Player
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

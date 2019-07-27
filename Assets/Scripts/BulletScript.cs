@@ -20,13 +20,11 @@ public class BulletScript : MonoBehaviour {
     // Unity Functions
     void Awake()
     {
-        /*
         if (bulletRB == null)
             bulletRB = GetComponent<Rigidbody>();
 
         if (soundSource == null)
             soundSource = GetComponent<AudioSource>();
-        */
     }
 
     void FixedUpdate()
@@ -36,7 +34,6 @@ public class BulletScript : MonoBehaviour {
 
         if (timerStarted == false)
             StartCoroutine(destroySelf());
-        
     }
 
     public void OnTriggerEnter(Collider other)
@@ -60,7 +57,16 @@ public class BulletScript : MonoBehaviour {
     // Public Functions
     public void bulletSetup(int damage, AudioClip shootSound, float soundVolume)
     {
+        // This version is kept for compatibility with the old ship system!
+        // DO NOT DELETE UNTIL THE NEW SYSTEM IS IMPLEMENTED!
         bulletDamage = damage;
+        soundSource.clip = shootSound;
+        soundSource.volume = soundVolume;
+        soundSource.Play();
+    }
+
+    public void bulletSetup(AudioClip shootSound, float soundVolume)
+    {
         soundSource.clip = shootSound;
         soundSource.volume = soundVolume;
         soundSource.Play();
