@@ -5,16 +5,13 @@ using UnityEngine.Events;
 
 public class TestPlayerController : MonoBehaviour
 {
-    public PlayerShipData shipData;
+    public PlayerShipData[] shipData;
+    private int shipDataIndex = 0;
     public int WeaponLevel = 1;
     private GameObject currentShip;
 
     void Start()
     {
-        // MUST ADD THE FUNCTIONS OF NEWLY INSTANTIATED OBJECT AS A LISTENER TO THE
-        // RESPECTIVE EVENTS IN THE SCRIPTABLE OBJECT!
-        // Is this the best way to do this? Probably not. Instead the script should
-        // probably do this instead. If doing that would work, delete this code!
         SetupShip();
     }
 
@@ -22,31 +19,32 @@ public class TestPlayerController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            shipData.ShootFunction.Invoke(WeaponLevel);
+            shipData[shipDataIndex].ShootFunction.Invoke(WeaponLevel);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             WeaponLevel = 1;
-            shipData.UpdateFunction.Invoke(WeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
             Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             WeaponLevel = 2;
-            shipData.UpdateFunction.Invoke(WeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
             Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             WeaponLevel = 3;
-            shipData.UpdateFunction.Invoke(WeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
             Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             Debug.Log("Destroying and replacing ship!");
-            shipData.EventCleanup();
+            shipData[shipDataIndex].EventCleanup();
+            shipDataIndex = (shipDataIndex + 1) % 2;
             Destroy(currentShip);
             Invoke("SetupShip", (1/60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
         }
@@ -55,11 +53,7 @@ public class TestPlayerController : MonoBehaviour
     // Private Functions
     private void SetupShip()
     {
-        currentShip = Instantiate(shipData.ShipModel, transform, false);
-        PlayerShipInterface tempInterface = currentShip.GetComponent<PlayerShipInterface>();
-        tempInterface.ShipData = shipData;
-        shipData.ShootFunction.AddListener(tempInterface.ShootWeapons);
-        shipData.UpdateFunction.AddListener(tempInterface.UpdateWeapons);
-        shipData.UpdateFunction.Invoke(WeaponLevel);
+        currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
+        shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
     }
 }

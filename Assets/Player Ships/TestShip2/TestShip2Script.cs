@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class TestShip2Script : MonoBehaviour, PlayerShipInterface
 {
-    public PlayerShipData ShipData { get; set; }
+    public PlayerShipData ShipData;
     private GameObject[] shootPoints = null;
 
     void Awake()
     {
         shootPoints = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
+        ShipData.ShootFunction.AddListener(ShootWeapons);
+        ShipData.UpdateFunction.AddListener(UpdateWeapons);
     }
 
     public void UpdateWeapons(int weaponLevel)

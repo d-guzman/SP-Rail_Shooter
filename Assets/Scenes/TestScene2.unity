@@ -150,7 +150,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d64405ebaee6626429c07b8acba6e04b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipData: {fileID: 11400000, guid: 1e3bb6dfaf7268a4ca45875f3470c20e, type: 2}
+  shipData:
+  - {fileID: 11400000, guid: 1e3bb6dfaf7268a4ca45875f3470c20e, type: 2}
+  - {fileID: 11400000, guid: e303441a0e8e48d49a4b9926bc194fd2, type: 2}
   WeaponLevel: 1
 --- !u!4 &7531330
 Transform:

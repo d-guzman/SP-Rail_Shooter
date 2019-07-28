@@ -51,7 +51,7 @@ GameObject:
   - component: {fileID: 7981322447428763000}
   - component: {fileID: 8386480809602044351}
   m_Layer: 9
-  m_Name: TestShip2
+  m_Name: TestShip2Model
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db3c1db96c45cc84294435aee447d59c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  shipData: {fileID: 11400000, guid: e303441a0e8e48d49a4b9926bc194fd2, type: 2}
+  ShipData: {fileID: 11400000, guid: e303441a0e8e48d49a4b9926bc194fd2, type: 2}
 --- !u!1 &7981322447474819504
 GameObject:
   m_ObjectHideFlags: 0

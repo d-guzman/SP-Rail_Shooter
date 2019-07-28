@@ -50,7 +50,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bulletRB: {fileID: 54071707449886142}
   soundSource: {fileID: 82604241759827764}
-  bulletSpeed: 500
+  bulletSpeed: 400
   duration: 2
   bulletDamage: 15
 --- !u!82 &82604241759827764
