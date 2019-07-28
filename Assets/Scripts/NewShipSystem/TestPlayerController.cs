@@ -15,14 +15,9 @@ public class TestPlayerController : MonoBehaviour
         // RESPECTIVE EVENTS IN THE SCRIPTABLE OBJECT!
         // Is this the best way to do this? Probably not. Instead the script should
         // probably do this instead. If doing that would work, delete this code!
-        currentShip = Instantiate(shipData.ShipModel, transform, false);
-        PlayerShipInterface tempInterface = currentShip.GetComponent<PlayerShipInterface>();
-        shipData.ShootFunction.AddListener(tempInterface.ShootWeapons);
-        shipData.UpdateFunction.AddListener(tempInterface.UpdateWeapons);
-        shipData.UpdateFunction.Invoke(WeaponLevel);
+        SetupShip();
     }
 
-    // Update is called once per frame
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space))
@@ -47,5 +42,24 @@ public class TestPlayerController : MonoBehaviour
             shipData.UpdateFunction.Invoke(WeaponLevel);
             Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
         }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            Debug.Log("Destroying and replacing ship!");
+            shipData.EventCleanup();
+            Destroy(currentShip);
+            Invoke("SetupShip", (1/60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
+        }
+    }
+
+    // Private Functions
+    private void SetupShip()
+    {
+        currentShip = Instantiate(shipData.ShipModel, transform, false);
+        PlayerShipInterface tempInterface = currentShip.GetComponent<PlayerShipInterface>();
+        tempInterface.ShipData = shipData;
+        shipData.ShootFunction.AddListener(tempInterface.ShootWeapons);
+        shipData.UpdateFunction.AddListener(tempInterface.UpdateWeapons);
+        shipData.UpdateFunction.Invoke(WeaponLevel);
     }
 }

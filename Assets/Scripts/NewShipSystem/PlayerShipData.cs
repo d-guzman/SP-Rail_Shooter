@@ -36,4 +36,12 @@ public class PlayerShipData : ScriptableObject
     public UnityEvent ChargeFunction;
     [HideInInspector()]
     public UnityEvent BumperFunction;
+
+    public void EventCleanup()
+    {
+        ShootFunction.RemoveAllListeners();
+        UpdateFunction.RemoveAllListeners();
+        ChargeFunction.RemoveAllListeners();
+        BumperFunction.RemoveAllListeners();
+    }
 }

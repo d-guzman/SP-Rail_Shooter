@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class DummyShipScript : MonoBehaviour, PlayerShipInterface
 {
-    public PlayerShipData shipData;
-    private GameObject[] shootPoints;
+    public PlayerShipData ShipData { get; set; }
+    private GameObject[] shootPoints = null;
 
     void Awake()
     {
@@ -47,16 +47,16 @@ public class DummyShipScript : MonoBehaviour, PlayerShipInterface
                 switch (weaponLevel)
                 {
                     case 1:
-                        tempBullet = Instantiate(shipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
-                        tempBullet.GetComponent<BulletScript>().bulletSetup(shipData.ShootingSounds[0], 1f);
+                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[0], 1f);
                         break;
                     case 2:
-                        tempBullet = Instantiate(shipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
-                        tempBullet.GetComponent<BulletScript>().bulletSetup(shipData.ShootingSounds[1], .6f);
+                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[1], .6f);
                         break;
                     case 3:
-                        tempBullet = Instantiate(shipData.MaxBullet, point.transform.position, point.transform.parent.rotation);
-                        tempBullet.GetComponent<BulletScript>().bulletSetup(shipData.ShootingSounds[2], .6f);
+                        tempBullet = Instantiate(ShipData.MaxBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[2], .6f);
                         break;
                 }
 

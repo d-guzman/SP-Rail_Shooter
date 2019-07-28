@@ -4,8 +4,8 @@ using UnityEngine;
 
 public class TestShip2Script : MonoBehaviour, PlayerShipInterface
 {
-    public PlayerShipData shipData;
-    private GameObject[] shootPoints;
+    public PlayerShipData ShipData { get; set; }
+    private GameObject[] shootPoints = null;
 
     void Awake()
     {
@@ -21,6 +21,7 @@ public class TestShip2Script : MonoBehaviour, PlayerShipInterface
 
     public void ShootWeapons(int weaponLevel)
     {
+        
         foreach (GameObject point in shootPoints)
         {
             GameObject tempBullet = null;
@@ -28,15 +29,15 @@ public class TestShip2Script : MonoBehaviour, PlayerShipInterface
             switch (weaponLevel)
             {
                 case 1:
-                    tempBullet = Instantiate(shipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
-                    tempBullet.GetComponent<BulletScript>().bulletSetup(shipData.ShootingSounds[0], .5f);
+                    tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                    tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[0], .5f);
                     break;
                 case 2:
-                    shootSubroutine = ThreeShotPattern(tempBullet, shipData.BaseBullet, point, shipData.ShootingSounds[0]);
+                    shootSubroutine = ThreeShotPattern(tempBullet, ShipData.BaseBullet, point, ShipData.ShootingSounds[0]);
                     StartCoroutine(shootSubroutine);
                     break;
                 case 3:
-                    shootSubroutine = ThreeShotPattern(tempBullet, shipData.MaxBullet, point, shipData.ShootingSounds[1]);
+                    shootSubroutine = ThreeShotPattern(tempBullet, ShipData.MaxBullet, point, ShipData.ShootingSounds[1]);
                     StartCoroutine(shootSubroutine);
                     break;
             }
