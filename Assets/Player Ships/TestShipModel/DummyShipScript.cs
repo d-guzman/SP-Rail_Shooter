@@ -2,19 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyShipScript : MonoBehaviour, PlayerShipInterface
+public class DummyShipScript : PlayerShip
 {
-    public PlayerShipData ShipData;
-    private GameObject[] shootPoints = null;
-
-    void Awake()
-    {
-        shootPoints = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
-        ShipData.ShootFunction.AddListener(ShootWeapons);
-        ShipData.UpdateFunction.AddListener(UpdateWeapons);
-    }
-
-    public void UpdateWeapons(int weaponLevel)
+    public override void UpdateWeapons(int weaponLevel)
     {
         switch (weaponLevel)
         {
@@ -39,7 +29,7 @@ public class DummyShipScript : MonoBehaviour, PlayerShipInterface
         }
     }
 
-    public void ShootWeapons(int weaponLevel)
+    public override void ShootWeapons(int weaponLevel)
     {
         foreach (GameObject point in shootPoints)
         {
@@ -66,13 +56,6 @@ public class DummyShipScript : MonoBehaviour, PlayerShipInterface
         }
     }
 
-    public void ChargeAbility()
-    {
-        // TBD
-    }
-
-    public void BumperAbility()
-    {
-        // TBD
-    }
+    public override void ChargeAbility() { /* TBD */ }
+    public override void BumperAbility() { /* TBD */ }
 }

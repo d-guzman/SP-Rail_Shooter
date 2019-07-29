@@ -2,28 +2,11 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TestShip2Script : MonoBehaviour, PlayerShipInterface
+public class TestShip2Script : PlayerShip
 {
-    public PlayerShipData ShipData;
-    private GameObject[] shootPoints = null;
-
-    void Awake()
+    public override void UpdateWeapons(int weaponLevel) { }
+    public override void ShootWeapons(int weaponLevel)
     {
-        shootPoints = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
-        ShipData.ShootFunction.AddListener(ShootWeapons);
-        ShipData.UpdateFunction.AddListener(UpdateWeapons);
-    }
-
-    public void UpdateWeapons(int weaponLevel)
-    {
-        // THIS IS INENTIONALLY LEFT BLANK.
-        // This ship always has 2 guns. The only thing that changes with weapon level is
-        // the type of shot and the pattern.
-    }
-
-    public void ShootWeapons(int weaponLevel)
-    {
-        
         foreach (GameObject point in shootPoints)
         {
             GameObject tempBullet = null;
@@ -46,8 +29,8 @@ public class TestShip2Script : MonoBehaviour, PlayerShipInterface
         }
     }
 
-    public void ChargeAbility() { }
-    public void BumperAbility() { }
+    public override void ChargeAbility() { }
+    public override void BumperAbility() { }
 
     // Coroutines!
     IEnumerator ThreeShotPattern(GameObject tempBullet, GameObject bulletType, GameObject point, AudioClip sound)
