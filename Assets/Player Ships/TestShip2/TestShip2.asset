@@ -16,7 +16,7 @@ MonoBehaviour:
     type: 3}
   ShipHealth: 0
   ShipEnergy: 0
-  ShipSpeed: 0
+  ShipSpeed: 20
   BaseBullet: {fileID: 5422477816337664186, guid: 2162934f9202ead4cb370850a856b7c8,
     type: 3}
   MaxBullet: {fileID: 8330066392514304643, guid: 8c8f368195cde564b9fc672b47240eed,

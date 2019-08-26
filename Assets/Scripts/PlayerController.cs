@@ -109,7 +109,6 @@ public class PlayerController : MonoBehaviour {
     //    transform.position = lerpedPos;
     //}
 
-    // haven't figured out how to rotate the ship with this, which makes the design of the game a bit more difficult.
     private void movePlayer_AsChild()
     {
         moveHori = Input.GetAxis("Horizontal");
@@ -117,7 +116,7 @@ public class PlayerController : MonoBehaviour {
         float rotateValue = Input.GetAxis("Rotate");
 
         Vector3 movement = new Vector3(moveHori, moveVert);
-        reticle.localPosition = new Vector3(0f, 0f, 35f) + movement;
+        //reticle.localPosition = new Vector3(0f, 0f, 10f) + movement;
 
         if (movement.magnitude > 1)
             movement.Normalize();
@@ -184,21 +183,10 @@ public class PlayerController : MonoBehaviour {
         }
 
         Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * lookAtDist;
-        //Vector3 reticlePoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori * 9 + mainCam.transform.up * moveVert * 9) + mainCam.transform.forward * (lookAtDist * 2f);
-        //reticle.position = reticlePoint;
         transform.LookAt(lookAtPoint);
 
-        //I don't know what problem I was trying to solve here, but i wasted a lot of time on it. Maybe could be used in movement as not a child object.
-        /*
-        Vector3 lookAtPointHori = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori) + mainCam.transform.forward * 10f;
-        Vector3 lookAtPointVert = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.up * moveVert) + mainCam.transform.forward * 10f;
-        float xRot = (Mathf.Atan2((lookAtPointVert - transform.position).magnitude, (lookAtPointVert - transform.position).y) * Mathf.Rad2Deg - 90f);
-        float yRot = -(Mathf.Atan2((lookAtPointHori - transform.position).z, (lookAtPointHori - transform.position).x) * Mathf.Rad2Deg - 90f);
-        //xRot = Mathf.Clamp(xRot, -15f, 15f);
-        //yRot = Mathf.Clamp(yRot, -15f, 15f);
-        Vector3 rot = new Vector3(xRot, yRot, 0f);
-        transform.localRotation = Quaternion.Euler(rot);
-        */
+        //Vector3 angleDirection = new Vector3(moveHori, moveVert, 3.5f);
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad * 50f);
 
         nextPos = transform.InverseTransformPoint(mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, viewportPos.z)));
         Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, moveSpeed * Time.deltaTime);

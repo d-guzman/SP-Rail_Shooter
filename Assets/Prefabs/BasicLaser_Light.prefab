@@ -51,7 +51,7 @@ MonoBehaviour:
   bulletRB: {fileID: 5441247975441413586}
   soundSource: {fileID: 5361064511250122584}
   bulletSpeed: 200
-  duration: 2
+  duration: 1
   bulletDamage: 10
 --- !u!82 &5361064511250122584
 AudioSource:
