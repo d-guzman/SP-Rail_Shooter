@@ -34,14 +34,17 @@ public class TestPlayerController : MonoBehaviour
         if (moveHori != 0f)
             movement += new Vector3(-rotateValue / 3.5f, 0f, 0f);
 
-        Vector3 nextPos = transform.position + movement;
-        Vector3 nextViewportPos = mainCam.WorldToViewportPoint(nextPos);
-        float viewX = Mathf.Clamp(nextViewportPos.x,.1f, .9f);
-        float viewY = Mathf.Clamp(nextViewportPos.y,.1f, .9f);
+        Vector3 nextPos = transform.localPosition + movement;
+        Vector3 nextViewportPos = mainCam.WorldToViewportPoint(transform.TransformPoint(nextPos));
+        float viewX = Mathf.Clamp(nextViewportPos.x, 0f, 1f);
+        float viewY = Mathf.Clamp(nextViewportPos.y, 0f, 1f);
 
-        nextPos = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f));
-        Vector3 lerpedPos = Vector3.Lerp(transform.position, nextPos, shipData[shipDataIndex].ShipSpeed * Time.deltaTime);
-        transform.localPosition = lerpedPos;
+        // Angle the ship in the direction of movement.
+        //Vector3 angleDirection = transform.TransformPoint(nextPos + new Vector3(0f, 0f, 1.5f));
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f);
+
+        Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * 11.5f;
+        transform.LookAt(lookAtPoint);
 
         // Rotate the ship model if the bumpers are pressed.
         if (rotateValue == -1)
@@ -90,11 +93,13 @@ public class TestPlayerController : MonoBehaviour
             }
         }
 
+        // Move the ship
+        nextPos = transform.InverseTransformPoint(mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, nextViewportPos.z)));
+        Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, shipData[shipDataIndex].ShipSpeed * Time.deltaTime);
+        lerpedPos.Set(lerpedPos.x, lerpedPos.y, 10f);
+        transform.localPosition = lerpedPos;
 
-        // Angle the ship in the direction of movement.
-        Vector3 angleDirection = new Vector3(moveHori, moveVert, 1.5f);
-        transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f);
-
+        
         DebugKeyInputTests();
     }
 
