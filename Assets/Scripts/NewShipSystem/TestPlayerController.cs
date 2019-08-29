@@ -43,7 +43,7 @@ public class TestPlayerController : MonoBehaviour
         //Vector3 angleDirection = transform.TransformPoint(nextPos + new Vector3(0f, 0f, 1.5f));
         //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f);
 
-        Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * 11.5f;
+        Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * 10f;
         transform.LookAt(lookAtPoint);
 
         // Rotate the ship model if the bumpers are pressed.
