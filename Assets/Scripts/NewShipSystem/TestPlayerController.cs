@@ -15,6 +15,9 @@ public class TestPlayerController : MonoBehaviour
     private float bumperRotateSpeed = .2f;
     private Camera mainCam;
 
+    private bool isHit = false;
+    public Rigidbody rb;
+
     void Start()
     {
         mainCam = Camera.main;
@@ -22,6 +25,19 @@ public class TestPlayerController : MonoBehaviour
     }
 
     void Update()
+    {
+        MoveShip();
+        DebugKeyInputTests();
+    }
+
+    // Private Functions
+    private void SetupShip()
+    {
+        currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
+        shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
+    }
+
+    private void MoveShip()
     {
         float moveVert = Input.GetAxis("Vertical");
         float moveHori = Input.GetAxis("Horizontal");
@@ -98,16 +114,6 @@ public class TestPlayerController : MonoBehaviour
         Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, shipData[shipDataIndex].ShipSpeed * Time.deltaTime);
         lerpedPos.Set(lerpedPos.x, lerpedPos.y, 10f);
         transform.localPosition = lerpedPos;
-
-        
-        DebugKeyInputTests();
-    }
-
-    // Private Functions
-    private void SetupShip()
-    {
-        currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
-        shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
     }
 
     private void DebugKeyInputTests()
@@ -142,6 +148,43 @@ public class TestPlayerController : MonoBehaviour
             shipDataIndex = (shipDataIndex + 1) % 2;
             Destroy(currentShip);
             Invoke("SetupShip", (1 / 60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
+        }
+    }
+
+    // Coroutines
+    IEnumerator takeDamage(int damage, int waitTime)
+    {
+        shipData[shipDataIndex].runtimeShipHealth -= damage;
+        yield return new WaitForSeconds((waitTime/60));
+        isHit = false;
+    }
+    IEnumerator shoveShip()
+    {
+        rb.AddForce(transform.up * 30f, ForceMode.Impulse);
+        yield return new WaitForSeconds(.075f);
+        rb.velocity = Vector3.zero;
+        rb.ResetInertiaTensor();
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "Level")
+        {
+            if (isHit == false)
+            {
+                isHit = true;
+                StartCoroutine(takeDamage(10,20));
+            }
+        }
+        if (other.tag == "Ground")
+        {
+            if (isHit == false)
+            {
+                isHit = true;
+                Debug.Log("hitground");
+                StartCoroutine(takeDamage(10,12));
+                StartCoroutine(shoveShip());
+            }
         }
     }
 }

@@ -12,10 +12,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7a0d56456c6b2b04882638c9a3925cc4, type: 3}
   m_Name: TestShip2
   m_EditorClassIdentifier: 
+  ShipName: Test Ship 2
   ShipModel: {fileID: 7981322447428763001, guid: d03bc69479e186f4cb6731a8b82d62f2,
     type: 3}
-  ShipHealth: 0
-  ShipEnergy: 0
+  ShipHealth: 90
+  ShipEnergy: 80
   ShipSpeed: 15
   BaseBullet: {fileID: 5422477816337664186, guid: 2162934f9202ead4cb370850a856b7c8,
     type: 3}

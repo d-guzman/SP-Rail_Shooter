@@ -11,6 +11,7 @@ TagManager:
   - Interactable
   - EnemyShip
   - EnemyLoad
+  - Ground
   layers:
   - Default
   - TransparentFX

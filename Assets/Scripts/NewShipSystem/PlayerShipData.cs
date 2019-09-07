@@ -9,16 +9,34 @@ public class ShootEvent : UnityEvent<int> { };
 public class UpdateWeaponEvent : UnityEvent<int> { };
 
 [CreateAssetMenu(fileName = "Ship", menuName = "PlayerShip", order = 1)]
-public class PlayerShipData : ScriptableObject
+public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
 {
     // Each player ship needs one PlayerShipData object, a "Ship" script that
     // implements the PlayerShipInterface interface, and a prefab with said
     // "Ship" script attached to it.
+    private bool isActive = false;
     [Header("Ship Data")]
+    public string ShipName;
     public GameObject ShipModel;
     public int ShipHealth;
     public int ShipEnergy;
     public float ShipSpeed;
+
+    [System.NonSerialized]
+    public int runtimeShipHealth;
+    [System.NonSerialized]
+    public int runtimeShipEnergy;
+    [System.NonSerialized]
+    public bool runtimeIsActive;
+
+    public void OnBeforeSerialize() { }
+    public void OnAfterDeserialize()
+    {
+        runtimeShipHealth = ShipHealth;
+        runtimeShipEnergy = ShipEnergy;
+        runtimeIsActive = isActive;
+
+    }
 
     [Header("Bullet Data")]
     // The Base and Max Bullets are holdovers from the previous Ship System.
@@ -39,6 +57,7 @@ public class PlayerShipData : ScriptableObject
 
     public void EventCleanup()
     {
+        runtimeIsActive = false;
         ShootFunction.RemoveAllListeners();
         UpdateFunction.RemoveAllListeners();
         ChargeFunction.RemoveAllListeners();

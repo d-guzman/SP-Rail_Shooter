@@ -85,6 +85,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   ShipData: {fileID: 11400000, guid: e303441a0e8e48d49a4b9926bc194fd2, type: 2}
+  rb: {fileID: 0}
 --- !u!1 &7981322447474819504
 GameObject:
   m_ObjectHideFlags: 0
