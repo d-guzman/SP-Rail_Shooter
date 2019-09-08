@@ -21,11 +21,14 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int ShipHealth;
     public int ShipEnergy;
     public float ShipSpeed;
+    private ShipStatus ShipStatus = ShipStatus.NoDamage;
 
     [System.NonSerialized]
     public int runtimeShipHealth;
     [System.NonSerialized]
     public int runtimeShipEnergy;
+    [System.NonSerialized]
+    public ShipStatus runtimeShipStatus;
     [System.NonSerialized]
     public bool runtimeIsActive;
 
@@ -35,6 +38,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         runtimeShipHealth = ShipHealth;
         runtimeShipEnergy = ShipEnergy;
         runtimeIsActive = isActive;
+        runtimeShipStatus = ShipStatus;
 
     }
 

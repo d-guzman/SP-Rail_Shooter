@@ -12,13 +12,49 @@ public class UserInterface : MonoBehaviour
     [Header("UI Element References")]                                                               // more convienent to set up in inspector, then make a prefab.
     public Text healthText;
     public Text energyText;
+    public Text ship1StatusText;
+    public Text ship2StatusText;
     private string htInit = "Health: ";
     private string etInit = "Energy: ";
+    private string s1Init = "Ship 1: ";
+    private string s2Init = "Ship 2: ";
+
+
+
 
     void Update()
     {
         for (int i = 0; i < selectedShips.Length; i++)
         {
+            // Update the Ship Status texts with the current status of each ship.
+            if (i == 0)
+            {
+                if (selectedShips[i].runtimeShipStatus == ShipStatus.NoDamage)
+                    ship1StatusText.text = s1Init + "Good";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.LightDamage)
+                    ship1StatusText.text = s1Init + "Light";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.HeavyDamage)
+                    ship1StatusText.text = s1Init + "Heavy";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.CriticalDamage)
+                    ship1StatusText.text = s1Init + "Critical";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.Down)
+                    ship1StatusText.text = s1Init + "Down";
+            }
+            else
+            {
+                if (selectedShips[i].runtimeShipStatus == ShipStatus.NoDamage)
+                    ship2StatusText.text = s2Init + "Good";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.LightDamage)
+                    ship2StatusText.text = s2Init + "Light";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.HeavyDamage)
+                    ship2StatusText.text = s2Init + "Heavy";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.CriticalDamage)
+                    ship2StatusText.text = s2Init + "Critical";
+                else if (selectedShips[i].runtimeShipStatus == ShipStatus.Down)
+                    ship2StatusText.text = s2Init + "Down";
+            }
+            
+            // Update the Ship Health and Energy to be accurate to the ship that is currently active.
             if (selectedShips[i].runtimeIsActive)
             {
                 healthText.text = htInit + selectedShips[i].runtimeShipHealth;

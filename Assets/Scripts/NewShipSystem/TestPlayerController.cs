@@ -5,16 +5,21 @@ using UnityEngine.Events;
 
 public class TestPlayerController : MonoBehaviour
 {
+    // Variables for Ship Management.
     public PlayerShipData[] shipData;
     private int shipDataIndex = 0;
     public int WeaponLevel = 1;
     private GameObject currentShip;
 
+    // Variables for rotating ship when pressing bumpers.
     private Vector3 maxLRotation = new Vector3(0f, 0f, 90f);
     private Vector3 maxRRotation = new Vector3(0f, 0f, 270f);
     private float bumperRotateSpeed = .2f;
+    
+    // Main Camera is used in movement code.
     private Camera mainCam;
 
+    // Variables used when taking damage.
     private bool isHit = false;
     public Rigidbody rb;
 
@@ -39,17 +44,21 @@ public class TestPlayerController : MonoBehaviour
 
     private void MoveShip()
     {
+        // Get input data.
         float moveVert = Input.GetAxis("Vertical");
         float moveHori = Input.GetAxis("Horizontal");
         float rotateValue = Input.GetAxis("Rotate");
 
+        // Make the movement vector and normalize input.
         Vector3 movement = new Vector3(moveHori, moveVert, 0f);
         if (movement.magnitude > 1)
             movement.Normalize();
 
+        // Change horizontal move speed when rotating ship; Move with rotation = faster, Move against rotation = slower.
         if (moveHori != 0f)
             movement += new Vector3(-rotateValue / 3.5f, 0f, 0f);
 
+        // Make a vector for the next position for the ship, and clamp it within the bounds of the camera.
         Vector3 nextPos = transform.localPosition + movement;
         Vector3 nextViewportPos = mainCam.WorldToViewportPoint(transform.TransformPoint(nextPos));
         float viewX = Mathf.Clamp(nextViewportPos.x, 0f, 1f);
@@ -57,8 +66,7 @@ public class TestPlayerController : MonoBehaviour
 
         // Angle the ship in the direction of movement.
         //Vector3 angleDirection = transform.TransformPoint(nextPos + new Vector3(0f, 0f, 1.5f));
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f);
-
+        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f
         Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * 10f;
         transform.LookAt(lookAtPoint);
 
@@ -155,6 +163,17 @@ public class TestPlayerController : MonoBehaviour
     IEnumerator takeDamage(int damage, int waitTime)
     {
         shipData[shipDataIndex].runtimeShipHealth -= damage;
+
+        float healthRatio = (float)shipData[shipDataIndex].runtimeShipHealth / shipData[shipDataIndex].ShipHealth;
+        if (healthRatio < 1f && healthRatio >= .6f)
+            shipData[shipDataIndex].runtimeShipStatus = ShipStatus.LightDamage;
+        else if (healthRatio < .6f && healthRatio >= .2f)
+            shipData[shipDataIndex].runtimeShipStatus = ShipStatus.HeavyDamage;
+        else if (healthRatio < .2f && healthRatio > 0f)
+            shipData[shipDataIndex].runtimeShipStatus = ShipStatus.CriticalDamage;
+        else
+            shipData[shipDataIndex].runtimeShipStatus = ShipStatus.Down;
+
         yield return new WaitForSeconds((waitTime/60));
         isHit = false;
     }
