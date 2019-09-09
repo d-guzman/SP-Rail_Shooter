@@ -8,7 +8,6 @@ public class TestPlayerController : MonoBehaviour
     // Variables for Ship Management.
     public PlayerShipData[] shipData;
     private int shipDataIndex = 0;
-    //public int WeaponLevel = 1;
     private GameObject currentShip;
 
     // Variables for rotating ship when pressing bumpers.
@@ -19,7 +18,8 @@ public class TestPlayerController : MonoBehaviour
     // Main Camera is used in movement code.
     private Camera mainCam;
 
-    // Variables used when taking damage.
+    // Variables used when entering triggers/collisions.
+    private bool gotPowerup = false;
     private bool isHit = false;
     public Rigidbody rb;
 
@@ -190,7 +190,7 @@ public class TestPlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
         if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
             shipData[shipDataIndex].runtimeWeaponLevel++;
-        isHit = false;
+        gotPowerup = false;
     }
 
 
@@ -208,9 +208,9 @@ public class TestPlayerController : MonoBehaviour
         else if (other.tag == "WeaponUpgrade")
         {
             Destroy(other.gameObject);
-            if (isHit == false)
+            if (gotPowerup == false)
             {
-                isHit = true;
+                gotPowerup = true;
                 StartCoroutine(getPowerup());
             }
         }
@@ -223,7 +223,7 @@ public class TestPlayerController : MonoBehaviour
             if (isHit == false)
             {
                 isHit = true;
-                StartCoroutine(takeDamage(10, 12));
+                StartCoroutine(takeDamage(10, 15));
                 StartCoroutine(shoveShip());
             }
         }

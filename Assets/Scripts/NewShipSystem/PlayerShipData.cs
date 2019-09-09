@@ -53,7 +53,6 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public GameObject MaxBullet;
     public List<AudioClip> ShootingSounds;
 
-    //[Header("Ship-Specific Functions")]
     [HideInInspector()]
     public UpdateWeaponEvent UpdateFunction;
     [HideInInspector()]
