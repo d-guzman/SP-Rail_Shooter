@@ -4,14 +4,14 @@ using UnityEngine;
 
 public class TestShip2Script : PlayerShip
 {
-    public override void UpdateWeapons(int weaponLevel) { }
-    public override void ShootWeapons(int weaponLevel)
+    public override void UpdateWeapons() { }
+    public override void ShootWeapons()
     {
         foreach (GameObject point in shootPoints)
         {
             GameObject tempBullet = null;
             IEnumerator shootSubroutine;
-            switch (weaponLevel)
+            switch (ShipData.runtimeWeaponLevel)
             {
                 case 1:
                     tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);

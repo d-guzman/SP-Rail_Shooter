@@ -3,10 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-[System.Serializable]
-public class ShootEvent : UnityEvent<int> { };
-[System.Serializable]
-public class UpdateWeaponEvent : UnityEvent<int> { };
 
 [CreateAssetMenu(fileName = "Ship", menuName = "PlayerShip", order = 1)]
 public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
@@ -54,9 +50,9 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public List<AudioClip> ShootingSounds;
 
     [HideInInspector()]
-    public UpdateWeaponEvent UpdateFunction;
+    public UnityEvent UpdateFunction;
     [HideInInspector()]
-    public ShootEvent ShootFunction;
+    public UnityEvent ShootFunction;
     [HideInInspector()]
     public UnityEvent ChargeFunction;
     [HideInInspector()]

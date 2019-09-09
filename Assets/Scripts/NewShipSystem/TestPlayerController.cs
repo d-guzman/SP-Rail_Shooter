@@ -39,7 +39,7 @@ public class TestPlayerController : MonoBehaviour
     private void SetupShip()
     {
         currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
-        shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+        shipData[shipDataIndex].UpdateFunction.Invoke();
     }
 
     private void MoveShip()
@@ -128,24 +128,24 @@ public class TestPlayerController : MonoBehaviour
     { 
         if (Input.GetButtonDown("Shoot"))
         {
-            shipData[shipDataIndex].ShootFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            shipData[shipDataIndex].ShootFunction.Invoke();
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             shipData[shipDataIndex].runtimeWeaponLevel = 1;
-            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke();
             Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
             shipData[shipDataIndex].runtimeWeaponLevel = 2;
-            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke();
             Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             shipData[shipDataIndex].runtimeWeaponLevel = 3;
-            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            shipData[shipDataIndex].UpdateFunction.Invoke();
             Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
 
@@ -190,6 +190,7 @@ public class TestPlayerController : MonoBehaviour
         yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
         if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
             shipData[shipDataIndex].runtimeWeaponLevel++;
+        shipData[shipDataIndex].UpdateFunction.Invoke();
         gotPowerup = false;
     }
 

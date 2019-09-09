@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class DummyShipScript : PlayerShip
 {
-    public override void UpdateWeapons(int weaponLevel)
+    public override void UpdateWeapons()
     {
-        switch (weaponLevel)
+        switch (ShipData.runtimeWeaponLevel)
         {
             case 1:
                 shootPoints[0].SetActive(false);
@@ -29,14 +29,14 @@ public class DummyShipScript : PlayerShip
         }
     }
 
-    public override void ShootWeapons(int weaponLevel)
+    public override void ShootWeapons()
     {
         foreach (GameObject point in shootPoints)
         {
             if (point.activeInHierarchy == true)
             {
                 GameObject tempBullet;
-                switch (weaponLevel)
+                switch (ShipData.runtimeWeaponLevel)
                 {
                     case 1:
                         tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
