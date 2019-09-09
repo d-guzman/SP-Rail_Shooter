@@ -8,7 +8,7 @@ public class TestPlayerController : MonoBehaviour
     // Variables for Ship Management.
     public PlayerShipData[] shipData;
     private int shipDataIndex = 0;
-    public int WeaponLevel = 1;
+    //public int WeaponLevel = 1;
     private GameObject currentShip;
 
     // Variables for rotating ship when pressing bumpers.
@@ -39,7 +39,7 @@ public class TestPlayerController : MonoBehaviour
     private void SetupShip()
     {
         currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
-        shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
+        shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
     }
 
     private void MoveShip()
@@ -128,25 +128,25 @@ public class TestPlayerController : MonoBehaviour
     { 
         if (Input.GetButtonDown("Shoot"))
         {
-            shipData[shipDataIndex].ShootFunction.Invoke(WeaponLevel);
+            shipData[shipDataIndex].ShootFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
         }
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
-            WeaponLevel = 1;
-            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
-            Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
+            shipData[shipDataIndex].runtimeWeaponLevel = 1;
+            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha2))
         {
-            WeaponLevel = 2;
-            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
-            Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
+            shipData[shipDataIndex].runtimeWeaponLevel = 2;
+            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
-            WeaponLevel = 3;
-            shipData[shipDataIndex].UpdateFunction.Invoke(WeaponLevel);
-            Debug.Log("Ship's weapon level set to: " + WeaponLevel.ToString());
+            shipData[shipDataIndex].runtimeWeaponLevel = 3;
+            shipData[shipDataIndex].UpdateFunction.Invoke(shipData[shipDataIndex].runtimeWeaponLevel);
+            Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
 
         if (Input.GetKeyDown(KeyCode.Tab))
@@ -158,6 +158,7 @@ public class TestPlayerController : MonoBehaviour
             Invoke("SetupShip", (1 / 60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
         }
     }
+
 
     // Coroutines
     IEnumerator takeDamage(int damage, int waitTime)
@@ -174,17 +175,26 @@ public class TestPlayerController : MonoBehaviour
         else
             shipData[shipDataIndex].runtimeShipStatus = ShipStatus.Down;
 
-        yield return new WaitForSeconds((waitTime/60));
+        yield return new WaitForSeconds((waitTime / 60));
         isHit = false;
     }
     IEnumerator shoveShip()
     {
         rb.AddForce(transform.up * 30f, ForceMode.Impulse);
-        yield return new WaitForSeconds(.075f);
+        yield return new WaitForSeconds(.09f);
         rb.velocity = Vector3.zero;
         rb.ResetInertiaTensor();
     }
+    IEnumerator getPowerup()
+    {
+        yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
+        if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
+            shipData[shipDataIndex].runtimeWeaponLevel++;
+        isHit = false;
+    }
 
+
+    // OnTrigger and OnCollision methods
     void OnTriggerEnter(Collider other)
     {
         if (other.tag == "Level")
@@ -192,16 +202,28 @@ public class TestPlayerController : MonoBehaviour
             if (isHit == false)
             {
                 isHit = true;
-                StartCoroutine(takeDamage(10,20));
+                StartCoroutine(takeDamage(10, 20));
             }
         }
-        if (other.tag == "Ground")
+        else if (other.tag == "WeaponUpgrade")
+        {
+            Destroy(other.gameObject);
+            if (isHit == false)
+            {
+                isHit = true;
+                StartCoroutine(getPowerup());
+            }
+        }
+    }
+
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.tag == "Ground")
         {
             if (isHit == false)
             {
                 isHit = true;
-                Debug.Log("hitground");
-                StartCoroutine(takeDamage(10,12));
+                StartCoroutine(takeDamage(10, 12));
                 StartCoroutine(shoveShip());
             }
         }

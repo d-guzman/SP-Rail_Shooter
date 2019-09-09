@@ -22,6 +22,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int ShipEnergy;
     public float ShipSpeed;
     private ShipStatus ShipStatus = ShipStatus.NoDamage;
+    private int weaponLevel = 1;
 
     [System.NonSerialized]
     public int runtimeShipHealth;
@@ -29,6 +30,8 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int runtimeShipEnergy;
     [System.NonSerialized]
     public ShipStatus runtimeShipStatus;
+    [System.NonSerialized]
+    public int runtimeWeaponLevel = 1;
     [System.NonSerialized]
     public bool runtimeIsActive;
 
@@ -39,6 +42,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         runtimeShipEnergy = ShipEnergy;
         runtimeIsActive = isActive;
         runtimeShipStatus = ShipStatus;
+        runtimeWeaponLevel = weaponLevel;
 
     }
 
