@@ -19,18 +19,77 @@ public class CameraMovement : MonoBehaviour
     private float currentHoriOffset = 0f;
     private float currentVertOffset = 0f;
 
+    private float forwardMoveSpeed;
     [Header("Forward Movement")]
-    public float forwardMoveSpeed = 50f;
+    public float forwardMoveSpeedDefault = 50f;
+    public float forwardMoveSpeedBraking = 25f;
+    public float forwardMoveSpeedBoosting = 75f;
+    public float forwardAcceleration = 2.5f;
     private Vector3 centralPoint;
+
+    [Header("Control Booleans")]
+    public bool isBoosting;
+    public bool isBraking;
 
     void Start()
     {
+        forwardMoveSpeed = forwardMoveSpeedDefault;
+        isBoosting = false;
+        isBraking = false;
         centralPoint = transform.position;
     }
 
     // Update is called once per frame
     void Update()
     {
+        /*
+        // --- CHECK BOOST INPUT CODE ---
+        // Can't boost if already braking.
+        if (Input.GetButtonDown("Boost") && !isBraking)
+        {
+            isBoosting = true;
+        }
+        else if (Input.GetButtonUp("Boost"))
+        {
+            isBoosting = false;
+        }
+
+        // --- CHECK BRAKE INPUT CODE ---
+        // Can't brake if already boosting.
+        if (Input.GetButtonDown("Brake") && !isBoosting)
+        {
+            isBraking = true;
+        }
+        else if (Input.GetButtonUp("Brake"))
+        {
+            isBraking = false;
+        }
+        */
+
+        // Change the forward move speed based the current action.
+        if (isBoosting)
+        {
+            if (forwardMoveSpeed < (forwardMoveSpeedBoosting - .05f))
+                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedBoosting, forwardAcceleration * Time.deltaTime);
+            else
+                forwardMoveSpeed = forwardMoveSpeedBoosting;
+        }
+        else if (isBraking)
+        {
+            if (forwardMoveSpeed > (forwardMoveSpeedBraking + .05f))
+                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedBraking, forwardAcceleration * Time.deltaTime);
+            else
+                forwardMoveSpeed = forwardMoveSpeedBraking;
+        }
+        else if (!isBoosting && !isBraking && forwardMoveSpeed != forwardMoveSpeedDefault)
+        {
+            if (forwardMoveSpeed > (forwardMoveSpeedBraking + .05f) || forwardMoveSpeed < (forwardMoveSpeedBoosting - .05f))
+                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedDefault, forwardAcceleration * Time.deltaTime);
+            else
+                forwardMoveSpeed = forwardMoveSpeedDefault;
+        }
+
+        // --- MOVEMENT CODE ---
         // Get input from the joystick.
         moveHori = Input.GetAxis("Horizontal");
         moveVert = Input.GetAxis("Vertical");

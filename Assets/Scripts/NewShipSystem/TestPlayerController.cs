@@ -9,6 +9,8 @@ public class TestPlayerController : MonoBehaviour
     public PlayerShipData[] shipData;
     private int shipDataIndex = 0;
     private GameObject currentShip;
+
+    [Header("Boost/Brake Variables")]
     public bool isBoosting = false;
     public bool isBraking = false;
     private float zPosition;
@@ -28,7 +30,9 @@ public class TestPlayerController : MonoBehaviour
     // Variables used when entering triggers/collisions.
     private bool gotPowerup = false;
     private bool isHit = false;
+    [Header("Misc. Variables for Things")]
     public Rigidbody rb;
+    public CameraMovement camScript;
 
     void Start()
     {
@@ -46,10 +50,12 @@ public class TestPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Boost") && !isBraking)
         {
             isBoosting = true;
+            camScript.isBoosting = true;
         }
         else if (Input.GetButtonUp("Boost"))
         {
             isBoosting = false;
+            camScript.isBoosting = false;
         }
 
         // --- CHECK BRAKE INPUT CODE ---
@@ -57,10 +63,12 @@ public class TestPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Brake") && !isBoosting)
         {
             isBraking = true;
+            camScript.isBraking = true;
         }
         else if (Input.GetButtonUp("Brake"))
         {
             isBraking = false;
+            camScript.isBraking = false;
         }
 
 
@@ -92,6 +100,8 @@ public class TestPlayerController : MonoBehaviour
             {
                 isBoosting = false;
                 isBraking = false;
+                camScript.isBoosting = false;
+                camScript.isBraking = false;
             }
         }
 
