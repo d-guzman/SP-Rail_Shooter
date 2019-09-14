@@ -245,6 +245,11 @@ MonoBehaviour:
   shipData:
   - {fileID: 11400000, guid: 1e3bb6dfaf7268a4ca45875f3470c20e, type: 2}
   - {fileID: 11400000, guid: e303441a0e8e48d49a4b9926bc194fd2, type: 2}
+  isBoosting: 0
+  zPositionDefault: 10
+  zPositionBoost: 15
+  zPositionBrake: 5
+  zPositionAcceleration: 2.5
   rb: {fileID: 7531331}
 --- !u!4 &7531330
 Transform:

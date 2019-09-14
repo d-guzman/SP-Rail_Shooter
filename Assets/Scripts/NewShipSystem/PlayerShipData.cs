@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-
 [CreateAssetMenu(fileName = "Ship", menuName = "PlayerShip", order = 1)]
 public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
 {

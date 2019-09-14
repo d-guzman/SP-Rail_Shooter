@@ -9,6 +9,13 @@ public class TestPlayerController : MonoBehaviour
     public PlayerShipData[] shipData;
     private int shipDataIndex = 0;
     private GameObject currentShip;
+    public bool isBoosting = false;
+    public bool isBraking = false;
+    private float zPosition;
+    public float zPositionDefault = 10f;
+    public float zPositionBoost = 15f;
+    public float zPositionBrake = 5f;
+    public float zPositionAcceleration = 5f;
 
     // Variables for rotating ship when pressing bumpers.
     private Vector3 maxLRotation = new Vector3(0f, 0f, 90f);
@@ -26,11 +33,68 @@ public class TestPlayerController : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
+        isBoosting = false;
+        isBraking = false;
+        zPosition = zPositionDefault;
         SetupShip();
     }
 
     void Update()
     {
+        // --- CHECK BOOST INPUT CODE ---
+        // Can't boost if already braking.
+        if (Input.GetButtonDown("Boost") && !isBraking)
+        {
+            isBoosting = true;
+        }
+        else if (Input.GetButtonUp("Boost"))
+        {
+            isBoosting = false;
+        }
+
+        // --- CHECK BRAKE INPUT CODE ---
+        // Can't brake if already boosting.
+        if (Input.GetButtonDown("Brake") && !isBoosting)
+        {
+            isBraking = true;
+        }
+        else if (Input.GetButtonUp("Brake"))
+        {
+            isBraking = false;
+        }
+
+
+        // --- ENERGY MANAGEMENT CODE ---
+        // If player is not boosting, braking, or charging(?), build up energy.
+        if (!isBoosting && !isBraking)
+        {
+            if (shipData[shipDataIndex].runtimeShipEnergy != shipData[shipDataIndex].ShipEnergy)
+            {
+                shipData[shipDataIndex].runtimeShipEnergy++;
+            }
+        }
+
+        // If player is boosting or braking, decrease energy.
+        if (isBoosting || isBraking)
+        {
+            if (shipData[shipDataIndex].runtimeShipEnergy > 0)
+            {
+                if ((shipData[shipDataIndex].runtimeShipEnergy - 2) <= 0)
+                {
+                    shipData[shipDataIndex].runtimeShipEnergy = 0;
+                }
+                else
+                {
+                    shipData[shipDataIndex].runtimeShipEnergy -= 2;
+                }
+            }
+            else
+            {
+                isBoosting = false;
+                isBraking = false;
+            }
+        }
+
         MoveShip();
         DebugKeyInputTests();
     }
@@ -41,7 +105,6 @@ public class TestPlayerController : MonoBehaviour
         currentShip = Instantiate(shipData[shipDataIndex].ShipModel, transform, false);
         shipData[shipDataIndex].UpdateFunction.Invoke();
     }
-
     private void MoveShip()
     {
         // Get input data.
@@ -65,9 +128,7 @@ public class TestPlayerController : MonoBehaviour
         float viewY = Mathf.Clamp(nextViewportPos.y, 0f, 1f);
 
         // Angle the ship in the direction of movement.
-        //Vector3 angleDirection = transform.TransformPoint(nextPos + new Vector3(0f, 0f, 1.5f));
-        //transform.rotation = Quaternion.RotateTowards(transform.rotation, Quaternion.LookRotation(angleDirection), Mathf.Deg2Rad*120f
-        Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, 10f)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * 10f;
+        Vector3 lookAtPoint = mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, zPosition)) + (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert) + mainCam.transform.forward * zPosition;
         transform.LookAt(lookAtPoint);
 
         // Rotate the ship model if the bumpers are pressed.
@@ -117,13 +178,35 @@ public class TestPlayerController : MonoBehaviour
             }
         }
 
+        // IF BOOSTING - Set the zPosition to move farther away.
+        if (isBoosting)
+        {
+            if (zPosition < (zPositionBoost - .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionBoost, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionBoost;
+        }
+        else if (isBraking)
+        {
+            if (zPosition > (zPositionBrake + .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionBrake, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionBrake;
+        }
+        else if (!isBoosting && !isBraking && zPosition != zPositionDefault)
+        {
+            if (zPosition > (zPositionDefault + .05f) || zPosition < (zPositionDefault - .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionDefault, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionDefault;
+        }
+
         // Move the ship
         nextPos = transform.InverseTransformPoint(mainCam.ViewportToWorldPoint(new Vector3(viewX, viewY, nextViewportPos.z)));
         Vector3 lerpedPos = Vector3.Lerp(transform.localPosition, nextPos, shipData[shipDataIndex].ShipSpeed * Time.deltaTime);
-        lerpedPos.Set(lerpedPos.x, lerpedPos.y, 10f);
+        lerpedPos.Set(lerpedPos.x, lerpedPos.y, zPosition);
         transform.localPosition = lerpedPos;
     }
-
     private void DebugKeyInputTests()
     { 
         if (Input.GetButtonDown("Shoot"))
@@ -216,7 +299,6 @@ public class TestPlayerController : MonoBehaviour
             }
         }
     }
-
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground")
