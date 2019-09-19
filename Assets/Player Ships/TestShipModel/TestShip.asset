@@ -18,6 +18,9 @@ MonoBehaviour:
   ShipHealth: 120
   ShipEnergy: 100
   ShipSpeed: 10
+  ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
+    type: 3}
+  ShipBombCount: 3
   BaseBullet: {fileID: 1030251944786134, guid: c27d52ac871fb2b4f9bb87ef79503d22, type: 3}
   MaxBullet: {fileID: 1030251944786134, guid: 0797335d8604ecf4d85ddddf60ed62ca, type: 3}
   ShootingSounds:
@@ -27,18 +30,24 @@ MonoBehaviour:
   UpdateFunction:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: UpdateWeaponEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral,
-      PublicKeyToken=null
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   ShootFunction:
     m_PersistentCalls:
       m_Calls: []
-    m_TypeName: ShootEvent, Assembly-CSharp, Version=0.0.0.0, Culture=neutral, PublicKeyToken=null
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
   ChargeFunction:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
       Culture=neutral, PublicKeyToken=null
   BumperFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BombFunction:
     m_PersistentCalls:
       m_Calls: []
     m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,

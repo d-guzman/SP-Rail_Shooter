@@ -6,6 +6,7 @@ public abstract class PlayerShip : MonoBehaviour
 {
     public PlayerShipData ShipData;
     protected GameObject[] shootPoints;
+    protected GameObject bombPoint;
 
     public abstract void UpdateWeapons();
     public abstract void ShootWeapons();
@@ -15,8 +16,18 @@ public abstract class PlayerShip : MonoBehaviour
     void Awake()
     {
         shootPoints = GameObject.FindGameObjectsWithTag("BulletSpawn_Player");
+        bombPoint = GameObject.FindGameObjectWithTag("BombSpawn_Player");
         ShipData.ShootFunction.AddListener(ShootWeapons);
         ShipData.UpdateFunction.AddListener(UpdateWeapons);
+        ShipData.BombFunction.AddListener(BombAbility);
         ShipData.runtimeIsActive = true;
+    }
+
+    // The reason for this function here is because firing a bomb is the same across
+    // ALL ships. The only thing that could be different is the type of bomb that they fire
+    // which can be made different (if desired) via the script that's attached to them.
+    public void BombAbility()
+    {
+        Instantiate(ShipData.ShipBomb, bombPoint.transform.position, bombPoint.transform.rotation);
     }
 }

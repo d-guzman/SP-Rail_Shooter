@@ -12,10 +12,12 @@ public class UserInterface : MonoBehaviour
     [Header("UI Element References")]                                                               // more convienent to set up in inspector, then make a prefab.
     public Text healthText;
     public Text energyText;
+    public Text bombText;
     public Text ship1StatusText;
     public Text ship2StatusText;
     private string htInit = "Health: ";
     private string etInit = "Energy: ";
+    private string btInit = "Bombs: ";
     private string s1Init = "Ship 1: ";
     private string s2Init = "Ship 2: ";
 
@@ -54,11 +56,12 @@ public class UserInterface : MonoBehaviour
                     ship2StatusText.text = s2Init + "Down";
             }
             
-            // Update the Ship Health and Energy to be accurate to the ship that is currently active.
+            // Update the Ship Health, Energy, and Bombs to be accurate to the ship that is currently active.
             if (selectedShips[i].runtimeIsActive)
             {
                 healthText.text = htInit + selectedShips[i].runtimeShipHealth;
                 energyText.text = etInit + selectedShips[i].runtimeShipEnergy;
+                bombText.text = btInit + selectedShips[i].runtimeShipBombCount;
             }
         }
     }

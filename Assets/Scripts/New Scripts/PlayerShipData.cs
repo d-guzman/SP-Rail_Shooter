@@ -16,6 +16,8 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int ShipHealth;
     public int ShipEnergy;
     public float ShipSpeed;
+    public GameObject ShipBomb;
+    public int ShipBombCount = 3;
     private ShipStatus ShipStatus = ShipStatus.NoDamage;
     private int weaponLevel = 1;
 
@@ -29,6 +31,8 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int runtimeWeaponLevel = 1;
     [System.NonSerialized]
     public bool runtimeIsActive;
+    [System.NonSerialized]
+    public int runtimeShipBombCount;
 
     public void OnBeforeSerialize() { }
     public void OnAfterDeserialize()
@@ -38,7 +42,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         runtimeIsActive = isActive;
         runtimeShipStatus = ShipStatus;
         runtimeWeaponLevel = weaponLevel;
-
+        runtimeShipBombCount = ShipBombCount;
     }
 
     [Header("Bullet Data")]
@@ -56,6 +60,8 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public UnityEvent ChargeFunction;
     [HideInInspector()]
     public UnityEvent BumperFunction;
+    [HideInInspector()]
+    public UnityEvent BombFunction;
 
     public void EventCleanup()
     {
@@ -64,5 +70,6 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         UpdateFunction.RemoveAllListeners();
         ChargeFunction.RemoveAllListeners();
         BumperFunction.RemoveAllListeners();
+        BombFunction.RemoveAllListeners();
     }
 }

@@ -12,6 +12,9 @@ TagManager:
   - EnemyShip
   - EnemyLoad
   - Ground
+  - BombPickup
+  - BombSpawn_Player
+  - Explosion
   layers:
   - Default
   - TransparentFX

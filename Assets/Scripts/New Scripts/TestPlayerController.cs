@@ -28,11 +28,13 @@ public class TestPlayerController : MonoBehaviour
     private Camera mainCam;
 
     // Variables used when entering triggers/collisions.
-    private bool gotPowerup = false;
+    private bool gotItemPickup = false;
     private bool isHit = false;
     [Header("Misc. Variables for Things")]
     public Rigidbody rb;
     public CameraMovement camScript;
+    public int framesToHoldForCharge = 12;
+    private int framesShootHeld = 0;
 
     void Start()
     {
@@ -45,68 +47,35 @@ public class TestPlayerController : MonoBehaviour
 
     void Update()
     {
-        // --- CHECK BOOST INPUT CODE ---
-        // Can't boost if already braking.
-        if (Input.GetButtonDown("Boost") && !isBraking)
+        // TEST CODE - When rotate button (bumper(s)) is pressed, can check if both
+        // are pressed if the value of the axis is 0!
+        if (Input.GetButtonDown("Rotate"))
         {
-            isBoosting = true;
-            camScript.isBoosting = true;
-        }
-        else if (Input.GetButtonUp("Boost"))
-        {
-            isBoosting = false;
-            camScript.isBoosting = false;
+            Debug.Log(Input.GetAxis("Rotate"));
         }
 
-        // --- CHECK BRAKE INPUT CODE ---
-        // Can't brake if already boosting.
-        if (Input.GetButtonDown("Brake") && !isBoosting)
+        if (Input.GetButtonDown("Bomb"))
         {
-            isBraking = true;
-            camScript.isBraking = true;
-        }
-        else if (Input.GetButtonUp("Brake"))
-        {
-            isBraking = false;
-            camScript.isBraking = false;
-        }
-
-
-        // --- ENERGY MANAGEMENT CODE ---
-        // If player is not boosting, braking, or charging(?), build up energy.
-        if (!isBoosting && !isBraking)
-        {
-            if (shipData[shipDataIndex].runtimeShipEnergy != shipData[shipDataIndex].ShipEnergy)
+            if (shipData[shipDataIndex].runtimeShipBombCount > 0)
             {
-                shipData[shipDataIndex].runtimeShipEnergy++;
-            }
-        }
-
-        // If player is boosting or braking, decrease energy.
-        if (isBoosting || isBraking)
-        {
-            if (shipData[shipDataIndex].runtimeShipEnergy > 0)
-            {
-                if ((shipData[shipDataIndex].runtimeShipEnergy - 2) <= 0)
-                {
-                    shipData[shipDataIndex].runtimeShipEnergy = 0;
-                }
-                else
-                {
-                    shipData[shipDataIndex].runtimeShipEnergy -= 2;
-                }
+                Debug.Log("Bomb Button pressed. Bombs Away!");
+                shipData[shipDataIndex].runtimeShipBombCount--;
+                shipData[shipDataIndex].BombFunction.Invoke();
             }
             else
-            {
-                isBoosting = false;
-                isBraking = false;
-                camScript.isBoosting = false;
-                camScript.isBraking = false;
-            }
+                Debug.Log("Bomb Button pressed. No more bombs...");
         }
 
+        CheckInput_Boost();
+        CheckInput_Brake();
+        ManageEnergy();
         MoveShip();
         DebugKeyInputTests();
+    }
+
+    void FixedUpdate()
+    {
+        ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent counting of frames.
     }
 
     // Private Functions
@@ -217,12 +186,93 @@ public class TestPlayerController : MonoBehaviour
         lerpedPos.Set(lerpedPos.x, lerpedPos.y, zPosition);
         transform.localPosition = lerpedPos;
     }
-    private void DebugKeyInputTests()
-    { 
+    private void ManageEnergy()
+    {
+        // --- ENERGY MANAGEMENT CODE ---
+        // If player is not boosting, braking, or charging(?), build up energy.
+        if (!isBoosting && !isBraking)
+        {
+            if (shipData[shipDataIndex].runtimeShipEnergy != shipData[shipDataIndex].ShipEnergy)
+            {
+                shipData[shipDataIndex].runtimeShipEnergy++;
+            }
+        }
+
+        // If player is boosting or braking, decrease energy.
+        if (isBoosting || isBraking)
+        {
+            if (shipData[shipDataIndex].runtimeShipEnergy > 0)
+            {
+                if ((shipData[shipDataIndex].runtimeShipEnergy - 2) <= 0)
+                {
+                    shipData[shipDataIndex].runtimeShipEnergy = 0;
+                }
+                else
+                {
+                    shipData[shipDataIndex].runtimeShipEnergy -= 2;
+                }
+            }
+            else
+            {
+                isBoosting = false;
+                isBraking = false;
+                camScript.isBoosting = false;
+                camScript.isBraking = false;
+            }
+        }
+    }
+    private void CheckInput_Boost()
+    {
+        // --- CHECK BOOST INPUT CODE ---
+        // Can't boost if already braking.
+        if (Input.GetButtonDown("Boost") && !isBraking)
+        {
+            isBoosting = true;
+            camScript.isBoosting = true;
+        }
+        else if (Input.GetButtonUp("Boost"))
+        {
+            isBoosting = false;
+            camScript.isBoosting = false;
+        }
+    }
+    private void CheckInput_Brake()
+    {
+        // --- CHECK BRAKE INPUT CODE ---
+        // Can't brake if already boosting.
+        if (Input.GetButtonDown("Brake") && !isBoosting)
+        {
+            isBraking = true;
+            camScript.isBraking = true;
+        }
+        else if (Input.GetButtonUp("Brake"))
+        {
+            isBraking = false;
+            camScript.isBraking = false;
+        }
+    }
+    private void ShootWeapons()
+    {
         if (Input.GetButtonDown("Shoot"))
         {
             shipData[shipDataIndex].ShootFunction.Invoke();
         }
+        if (Input.GetButton("Shoot"))
+        {
+            framesShootHeld++;
+            if (framesShootHeld == framesToHoldForCharge)
+            {
+                Debug.Log("Shoot Button held for " + framesToHoldForCharge.ToString() + " frames. Start Charging.");
+            }
+        }
+        if (Input.GetButtonUp("Shoot"))
+        {
+            framesShootHeld = 0;
+        }
+    }
+    private void DebugKeyInputTests()
+    { 
+        
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             shipData[shipDataIndex].runtimeWeaponLevel = 1;
@@ -278,13 +328,20 @@ public class TestPlayerController : MonoBehaviour
         rb.velocity = Vector3.zero;
         rb.ResetInertiaTensor();
     }
-    IEnumerator getPowerup()
+    IEnumerator getPowerup(ItemType itemType)
     {
         yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
-        if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
-            shipData[shipDataIndex].runtimeWeaponLevel++;
-        shipData[shipDataIndex].UpdateFunction.Invoke();
-        gotPowerup = false;
+        if (itemType == ItemType.WeaponUpgrade)
+        {
+            if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
+                shipData[shipDataIndex].runtimeWeaponLevel++;
+            shipData[shipDataIndex].UpdateFunction.Invoke();
+        }
+        else if (itemType == ItemType.BombPickup)
+        {
+            shipData[shipDataIndex].runtimeShipBombCount++;
+        }
+        gotItemPickup = false;
     }
 
 
@@ -296,16 +353,25 @@ public class TestPlayerController : MonoBehaviour
             if (isHit == false)
             {
                 isHit = true;
-                StartCoroutine(takeDamage(10, 20));
+                StartCoroutine(takeDamage(10, 60));
             }
         }
         else if (other.tag == "WeaponUpgrade")
         {
             Destroy(other.gameObject);
-            if (gotPowerup == false)
+            if (gotItemPickup == false)
             {
-                gotPowerup = true;
-                StartCoroutine(getPowerup());
+                gotItemPickup = true;
+                StartCoroutine(getPowerup(ItemType.WeaponUpgrade));
+            }
+        }
+        else if (other.tag == "BombPickup")
+        {
+            Destroy(other.gameObject);
+            if (gotItemPickup == false)
+            {
+                gotItemPickup = true;
+                StartCoroutine(getPowerup(ItemType.BombPickup));
             }
         }
     }
