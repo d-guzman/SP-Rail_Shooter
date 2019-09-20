@@ -20,6 +20,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public int ShipBombCount = 3;
     private ShipStatus ShipStatus = ShipStatus.NoDamage;
     private int weaponLevel = 1;
+    public int BumperAbilityCost;
 
     [System.NonSerialized]
     public int runtimeShipHealth;

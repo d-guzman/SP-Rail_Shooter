@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class DummyShipScript : PlayerShip
 {
+    private float rotationSpeed = 18f;
+
     public override void UpdateWeapons()
     {
         switch (ShipData.runtimeWeaponLevel)
@@ -28,7 +30,6 @@ public class DummyShipScript : PlayerShip
                 break;
         }
     }
-
     public override void ShootWeapons()
     {
         foreach (GameObject point in shootPoints)
@@ -55,7 +56,22 @@ public class DummyShipScript : PlayerShip
             }
         }
     }
-
     public override void ChargeAbility() { /* TBD */ }
-    public override void BumperAbility() { /* TBD */ }
+    public override void BumperAbility()
+    {
+        Debug.Log("Bumper Ability Invoked! (Barrel Roll)");
+        StartCoroutine(BarrelRoll());
+    }
+
+    IEnumerator BarrelRoll()
+    {
+        float test = transform.localRotation.z;
+        for (int i = 0; i < 20; i++)
+        {
+            test += rotationSpeed;
+            transform.localRotation = Quaternion.Euler(0f, 0f, test);
+            yield return null;
+        }
+        transform.localRotation = Quaternion.identity;
+    }
 }

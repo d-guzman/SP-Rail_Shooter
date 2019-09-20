@@ -30,7 +30,12 @@ public class TestShip2Script : PlayerShip
     }
 
     public override void ChargeAbility() { }
-    public override void BumperAbility() { }
+    public override void BumperAbility()
+    {
+        Debug.Log("Bumper Ability Invoked! (Cloak?!)");
+        StartCoroutine(Cloak());
+
+    }
 
     // Coroutines!
     IEnumerator ThreeShotPattern(GameObject tempBullet, GameObject bulletType, GameObject point, AudioClip sound)
@@ -40,6 +45,20 @@ public class TestShip2Script : PlayerShip
             tempBullet = Instantiate(bulletType, point.transform.position, point.transform.parent.rotation);
             tempBullet.GetComponent<BulletScript>().bulletSetup(sound, .5f);
             yield return new WaitForSeconds(.1f);
+        }
+    }
+
+    IEnumerator Cloak()
+    {
+        MeshRenderer[] renderers = transform.GetComponentsInChildren<MeshRenderer>();
+        foreach (MeshRenderer rend in renderers)
+        {
+            rend.enabled = false;
+        }
+        yield return new WaitForSeconds(1.35f);
+        foreach (MeshRenderer rend in renderers)
+        {
+            rend.enabled = true;
         }
     }
 }

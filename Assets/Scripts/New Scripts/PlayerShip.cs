@@ -19,6 +19,8 @@ public abstract class PlayerShip : MonoBehaviour
         bombPoint = GameObject.FindGameObjectWithTag("BombSpawn_Player");
         ShipData.ShootFunction.AddListener(ShootWeapons);
         ShipData.UpdateFunction.AddListener(UpdateWeapons);
+        ShipData.ChargeFunction.AddListener(ChargeAbility);
+        ShipData.BumperFunction.AddListener(BumperAbility);
         ShipData.BombFunction.AddListener(BombAbility);
         ShipData.runtimeIsActive = true;
     }

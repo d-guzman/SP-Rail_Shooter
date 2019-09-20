@@ -51,7 +51,11 @@ public class TestPlayerController : MonoBehaviour
         // are pressed if the value of the axis is 0!
         if (Input.GetButtonDown("Rotate"))
         {
-            Debug.Log(Input.GetAxis("Rotate"));
+            if (Input.GetAxis("Rotate") == 0 && (shipData[shipDataIndex].runtimeShipEnergy >= shipData[shipDataIndex].BumperAbilityCost))
+            {
+                shipData[shipDataIndex].BumperFunction.Invoke();
+                shipData[shipDataIndex].runtimeShipEnergy -= shipData[shipDataIndex].BumperAbilityCost;
+            }
         }
 
         if (Input.GetButtonDown("Bomb"))
@@ -111,6 +115,7 @@ public class TestPlayerController : MonoBehaviour
         transform.LookAt(lookAtPoint);
 
         // Rotate the ship model if the bumpers are pressed.
+
         if (rotateValue == -1)
         {
             if (currentShip.transform.localRotation.eulerAngles.z > 270.5f)
@@ -209,7 +214,7 @@ public class TestPlayerController : MonoBehaviour
                 }
                 else
                 {
-                    shipData[shipDataIndex].runtimeShipEnergy -= 2;
+                    shipData[shipDataIndex].runtimeShipEnergy -= 4;
                 }
             }
             else
