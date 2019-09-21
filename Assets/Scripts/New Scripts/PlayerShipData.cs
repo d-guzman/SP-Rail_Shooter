@@ -21,6 +21,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     private ShipStatus ShipStatus = ShipStatus.NoDamage;
     private int weaponLevel = 1;
     public int BumperAbilityCost;
+    private ShipState ShipStates_All = 0;
 
     [System.NonSerialized]
     public int runtimeShipHealth;
@@ -34,6 +35,8 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     public bool runtimeIsActive;
     [System.NonSerialized]
     public int runtimeShipBombCount;
+    [System.NonSerialized]
+    public ShipState runtimeShipState;
 
     public void OnBeforeSerialize() { }
     public void OnAfterDeserialize()
@@ -44,6 +47,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         runtimeShipStatus = ShipStatus;
         runtimeWeaponLevel = weaponLevel;
         runtimeShipBombCount = ShipBombCount;
+        runtimeShipState = ShipStates_All;
     }
 
     [Header("Bullet Data")]
@@ -72,5 +76,27 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
         ChargeFunction.RemoveAllListeners();
         BumperFunction.RemoveAllListeners();
         BombFunction.RemoveAllListeners();
+    }
+
+    public bool CheckStateFlag<T>(T shipState, T flag) where T : struct
+    {
+        int shipStateValue = (int)(object)shipState;
+        int shipStateFlagValue = (int)(object)flag;
+
+        return (shipStateValue & shipStateFlagValue) != 0;
+    }
+    public void SetStateFlag<T>(ref T shipState, T flag) where T : struct
+    {
+        int shipStateValue = (int)(object)shipState;
+        int shipStateFlagValue = (int)(object)flag;
+
+        shipState = (T)(object)(shipStateValue | shipStateFlagValue);
+    }
+    public void UnsetStateFlag<T>(ref T shipState, T flag) where T : struct
+    {
+        int shipStateValue = (int)(object)shipState;
+        int shipStateFlagValue = (int)(object)flag;
+
+        shipState = (T)(object)(shipStateValue & (~shipStateFlagValue));
     }
 }

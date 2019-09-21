@@ -16,11 +16,12 @@ MonoBehaviour:
   ShipModel: {fileID: 7981322447428763001, guid: d03bc69479e186f4cb6731a8b82d62f2,
     type: 3}
   ShipHealth: 90
-  ShipEnergy: 80
+  ShipEnergy: 160
   ShipSpeed: 15
   ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
     type: 3}
   ShipBombCount: 3
+  BumperAbilityCost: 160
   BaseBullet: {fileID: 5422477816337664186, guid: 2162934f9202ead4cb370850a856b7c8,
     type: 3}
   MaxBullet: {fileID: 8330066392514304643, guid: 8c8f368195cde564b9fc672b47240eed,

@@ -11,8 +11,6 @@ public class TestPlayerController : MonoBehaviour
     private GameObject currentShip;
 
     [Header("Boost/Brake Variables")]
-    public bool isBoosting = false;
-    public bool isBraking = false;
     private float zPosition;
     public float zPositionDefault = 10f;
     public float zPositionBoost = 15f;
@@ -39,47 +37,24 @@ public class TestPlayerController : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        isBoosting = false;
-        isBraking = false;
         zPosition = zPositionDefault;
         SetupShip();
     }
 
     void Update()
     {
-        // TEST CODE - When rotate button (bumper(s)) is pressed, can check if both
-        // are pressed if the value of the axis is 0!
-        if (Input.GetButtonDown("Rotate"))
-        {
-            if (Input.GetAxis("Rotate") == 0 && (shipData[shipDataIndex].runtimeShipEnergy >= shipData[shipDataIndex].BumperAbilityCost))
-            {
-                shipData[shipDataIndex].BumperFunction.Invoke();
-                shipData[shipDataIndex].runtimeShipEnergy -= shipData[shipDataIndex].BumperAbilityCost;
-            }
-        }
-
-        if (Input.GetButtonDown("Bomb"))
-        {
-            if (shipData[shipDataIndex].runtimeShipBombCount > 0)
-            {
-                Debug.Log("Bomb Button pressed. Bombs Away!");
-                shipData[shipDataIndex].runtimeShipBombCount--;
-                shipData[shipDataIndex].BombFunction.Invoke();
-            }
-            else
-                Debug.Log("Bomb Button pressed. No more bombs...");
-        }
-
         CheckInput_Boost();
         CheckInput_Brake();
         ManageEnergy();
+        PerformBumperAbility();
+        ShootBomb();
         MoveShip();
         DebugKeyInputTests();
     }
 
     void FixedUpdate()
     {
-        ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent counting of frames.
+        ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent(?) counting of frames.
     }
 
     // Private Functions
@@ -162,7 +137,11 @@ public class TestPlayerController : MonoBehaviour
             }
         }
 
-        // IF BOOSTING - Set the zPosition to move farther away.
+        // IF BOOSTING - Set the zPosition to move farther away from camera.
+        // IF BRAKING - Set the zPosition to move closer to camera.
+        bool isBoosting = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
+        bool isBraking = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+
         if (isBoosting)
         {
             if (zPosition < (zPositionBoost - .05f))
@@ -195,6 +174,9 @@ public class TestPlayerController : MonoBehaviour
     {
         // --- ENERGY MANAGEMENT CODE ---
         // If player is not boosting, braking, or charging(?), build up energy.
+        bool isBoosting = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
+        bool isBraking = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+
         if (!isBoosting && !isBraking)
         {
             if (shipData[shipDataIndex].runtimeShipEnergy != shipData[shipDataIndex].ShipEnergy)
@@ -219,8 +201,8 @@ public class TestPlayerController : MonoBehaviour
             }
             else
             {
-                isBoosting = false;
-                isBraking = false;
+                shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
+                shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
                 camScript.isBoosting = false;
                 camScript.isBraking = false;
             }
@@ -230,30 +212,41 @@ public class TestPlayerController : MonoBehaviour
     {
         // --- CHECK BOOST INPUT CODE ---
         // Can't boost if already braking.
-        if (Input.GetButtonDown("Boost") && !isBraking)
+        if (Input.GetButtonDown("Boost") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking))
         {
-            isBoosting = true;
-            camScript.isBoosting = true;
+            camScript.isBoosting = true;        // still need this cause the camera needs references to the shipdata (fuck).
+            shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
         }
         else if (Input.GetButtonUp("Boost"))
         {
-            isBoosting = false;
             camScript.isBoosting = false;
+            shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
         }
     }
     private void CheckInput_Brake()
     {
         // --- CHECK BRAKE INPUT CODE ---
         // Can't brake if already boosting.
-        if (Input.GetButtonDown("Brake") && !isBoosting)
+        if (Input.GetButtonDown("Brake") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting))
         {
-            isBraking = true;
             camScript.isBraking = true;
+            shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
         }
         else if (Input.GetButtonUp("Brake"))
         {
-            isBraking = false;
             camScript.isBraking = false;
+            shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+        }
+    }
+    private void PerformBumperAbility()
+    {
+        if (Input.GetButtonDown("Rotate"))
+        {
+            if (Input.GetAxis("Rotate") == 0 && (shipData[shipDataIndex].runtimeShipEnergy >= shipData[shipDataIndex].BumperAbilityCost))
+            {
+                shipData[shipDataIndex].BumperFunction.Invoke();
+                shipData[shipDataIndex].runtimeShipEnergy -= shipData[shipDataIndex].BumperAbilityCost;
+            }
         }
     }
     private void ShootWeapons()
@@ -273,6 +266,20 @@ public class TestPlayerController : MonoBehaviour
         if (Input.GetButtonUp("Shoot"))
         {
             framesShootHeld = 0;
+        }
+    }
+    private void ShootBomb()
+    {
+        if (Input.GetButtonDown("Bomb"))
+        {
+            if (shipData[shipDataIndex].runtimeShipBombCount > 0)
+            {
+                Debug.Log("Bomb Button pressed. Bombs Away!");
+                shipData[shipDataIndex].runtimeShipBombCount--;
+                shipData[shipDataIndex].BombFunction.Invoke();
+            }
+            else
+                Debug.Log("Bomb Button pressed. No more bombs...");
         }
     }
     private void DebugKeyInputTests()

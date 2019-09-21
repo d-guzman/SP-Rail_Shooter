@@ -16,11 +16,12 @@ MonoBehaviour:
   ShipModel: {fileID: 3862384520167706820, guid: bb253c86463ab4342a47c66a5c5a5846,
     type: 3}
   ShipHealth: 120
-  ShipEnergy: 100
+  ShipEnergy: 200
   ShipSpeed: 10
   ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
     type: 3}
   ShipBombCount: 3
+  BumperAbilityCost: 90
   BaseBullet: {fileID: 1030251944786134, guid: c27d52ac871fb2b4f9bb87ef79503d22, type: 3}
   MaxBullet: {fileID: 1030251944786134, guid: 0797335d8604ecf4d85ddddf60ed62ca, type: 3}
   ShootingSounds:
