@@ -9,5 +9,7 @@ public enum ShipState
     isBoosting = 0x01,              // 0000 0001
     isBraking = 0x02,               // 0000 0010
     isCharging = 0x04,              // 0000 0100
-    BumperActive = 0x08             // 0000 1000
+    BumperActive = 0x08,            // 0000 1000
+    gotHit = 0x16,                  // 0001 0000
+    gotItem = 0x32                  // 0010 0000
 }
