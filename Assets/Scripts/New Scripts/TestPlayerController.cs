@@ -331,7 +331,7 @@ public class TestPlayerController : MonoBehaviour
             shipData[shipDataIndex].runtimeShipStatus = ShipStatus.Down;
 
         yield return new WaitForSeconds((waitTime / 60));
-        isHit = false;
+        shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotHit);
     }
     IEnumerator shoveShip()
     {
@@ -353,7 +353,7 @@ public class TestPlayerController : MonoBehaviour
         {
             shipData[shipDataIndex].runtimeShipBombCount++;
         }
-        gotItemPickup = false;
+        shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotItem);
     }
 
 
@@ -362,27 +362,27 @@ public class TestPlayerController : MonoBehaviour
     {
         if (other.tag == "Level")
         {
-            if (isHit == false)
+            if (!shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.gotHit))
             {
-                isHit = true;
+                shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotHit);
                 StartCoroutine(takeDamage(10, 60));
             }
         }
         else if (other.tag == "WeaponUpgrade")
         {
             Destroy(other.gameObject);
-            if (gotItemPickup == false)
+            if (!shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.gotItem))
             {
-                gotItemPickup = true;
+                shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotItem);
                 StartCoroutine(getPowerup(ItemType.WeaponUpgrade));
             }
         }
         else if (other.tag == "BombPickup")
         {
             Destroy(other.gameObject);
-            if (gotItemPickup == false)
+            if (!shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.gotItem))
             {
-                gotItemPickup = true;
+                shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotItem);
                 StartCoroutine(getPowerup(ItemType.BombPickup));
             }
         }
@@ -391,9 +391,9 @@ public class TestPlayerController : MonoBehaviour
     {
         if (collision.gameObject.tag == "Ground")
         {
-            if (isHit == false)
+            if (!shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.gotHit))
             {
-                isHit = true;
+                shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotHit);
                 StartCoroutine(takeDamage(10, 15));
                 StartCoroutine(shoveShip());
             }
