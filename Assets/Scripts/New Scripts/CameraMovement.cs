@@ -39,33 +39,8 @@ public class CameraMovement : MonoBehaviour
         centralPoint = transform.position;
     }
 
-    // Update is called once per frame
-    void Update()
+    void LateUpdate()
     {
-        /*
-        // --- CHECK BOOST INPUT CODE ---
-        // Can't boost if already braking.
-        if (Input.GetButtonDown("Boost") && !isBraking)
-        {
-            isBoosting = true;
-        }
-        else if (Input.GetButtonUp("Boost"))
-        {
-            isBoosting = false;
-        }
-
-        // --- CHECK BRAKE INPUT CODE ---
-        // Can't brake if already boosting.
-        if (Input.GetButtonDown("Brake") && !isBoosting)
-        {
-            isBraking = true;
-        }
-        else if (Input.GetButtonUp("Brake"))
-        {
-            isBraking = false;
-        }
-        */
-
         // Change the forward move speed based the current action.
         if (isBoosting)
         {
