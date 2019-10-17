@@ -248,7 +248,7 @@ MonoBehaviour:
   zPositionDefault: 10
   zPositionBoost: 15
   zPositionBrake: 5
-  zPositionAcceleration: 1
+  zPositionAcceleration: 2
   screenEdgeBufferSize: 0.05
   rotationSpeed: 3
   maxYaw: 30

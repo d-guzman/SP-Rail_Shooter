@@ -23,14 +23,10 @@ public class TestPlayerController : MonoBehaviour
     private float bumperRotateSpeed = .2f;
 
     // Variables for movement.
-    [Tooltip("How large the buffers on the edge of the screen are (so the player ship doesn't go offscreen), in terms of percent.")]
-    public float screenEdgeBufferSize = .05f;
     private Camera mainCam;
     private float moveHori;
     private float moveVert;
     private float bumperValue;
-    private float screenWidthBuffer;
-    private float screenHeightBuffer;
 
     [Header("Rotation Values")]
     public float rotationSpeed = 5f;
@@ -55,8 +51,6 @@ public class TestPlayerController : MonoBehaviour
     {
         mainCam = Camera.main;
         zPosition = zPositionDefault;
-        screenWidthBuffer = (float)mainCam.pixelWidth * screenEdgeBufferSize;
-        screenHeightBuffer = (float)mainCam.pixelHeight * screenEdgeBufferSize;
         SetupShip();
     }
 
@@ -74,7 +68,11 @@ public class TestPlayerController : MonoBehaviour
 
         if(useOldMovement)
             MoveShip();
-
+        if (!useOldMovement)
+        {
+            AimShip();
+            RollShip();
+        }
         DebugKeyInputTests();
     }
 
@@ -84,8 +82,6 @@ public class TestPlayerController : MonoBehaviour
             TranslateShipForces();
         if (useRigidbodyTranslationMovement)
             TranslateShipMovePosition();
-        AimShip();
-        RollShip();
         ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent(?) counting of frames.
     }
 
@@ -144,48 +140,40 @@ public class TestPlayerController : MonoBehaviour
 
         // If the player ship gets too close to the camera's edge, don't apply force
         // in the direction of that edge.
-        Vector3 screenPosition = mainCam.WorldToScreenPoint(transform.position);
-        if ((screenPosition.x < screenWidthBuffer && moveHori < 0f) || (screenPosition.x > (mainCam.pixelWidth - screenWidthBuffer) && moveHori > 0f))
-            movement -= (mainCam.transform.right * moveHori);
-        if ((screenPosition.y < screenHeightBuffer && moveVert < 0f) || (screenPosition.y > (mainCam.pixelHeight - screenHeightBuffer) && moveVert > 0f))
-            movement -= (mainCam.transform.up * moveVert);
+        //Vector3 screenPosition = mainCam.WorldToScreenPoint(transform.position);
+        //if ((screenPosition.x < screenWidthBuffer && moveHori < 0f) || (screenPosition.x > (mainCam.pixelWidth - screenWidthBuffer) && moveHori > 0f))
+        //    movement -= (mainCam.transform.right * moveHori);
+        //if ((screenPosition.y < screenHeightBuffer && moveVert < 0f) || (screenPosition.y > (mainCam.pixelHeight - screenHeightBuffer) && moveVert > 0f))
+        //    movement -= (mainCam.transform.up * moveVert);
 
         // Normalize the movement vector.
         if (movement.magnitude > 1)
             movement.Normalize();
 
-        // If boosting, add a new vector (representing boosting) to movement.
-        // If braking, subtract a new vector (representing braking) to movement.
+        // IF BOOSTING - Set the zPosition to move farther away from camera.
+        // IF BRAKING - Set the zPosition to move closer to camera.
         bool isBoosting = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
         bool isBraking = shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
-        if (isBoosting && (transform.localPosition.z < zPositionBoost))
+        if (isBoosting)
         {
-            movement += (mainCam.transform.forward * zPositionAcceleration);
+            if (zPosition < (zPositionBoost - .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionBoost, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionBoost;
         }
-        else if (isBraking && (transform.localPosition.z > zPositionBrake))
+        else if (isBraking)
         {
-            movement -= (mainCam.transform.forward * zPositionAcceleration);
+            if (zPosition > (zPositionBrake + .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionBrake, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionBrake;
         }
-        else if (!isBoosting && !isBraking && (transform.localPosition.z > (zPositionDefault + .05f) || transform.localPosition.z < (zPositionDefault - .05f)))
+        else if (!isBoosting && !isBraking && zPosition != zPositionDefault)
         {
-            float zPositionDifference = (transform.localPosition.z - zPositionDefault);
-            if (zPositionDifference > .05f || zPositionDifference < -.05f)
-            {
-                movement -= (mainCam.transform.forward * (zPositionAcceleration * Mathf.Clamp(zPositionDifference, -1f, 1f)));
-            }
-        }
-
-        // If we are at the edges of the screen, immediately subtract the
-        // respective velocity. This hasn't accounted for boosting/braking.
-        if ((screenPosition.x < screenWidthBuffer) || (screenPosition.x > (mainCam.pixelWidth - screenWidthBuffer)))
-        {
-            //Debug.Log("Horizontal Screen-edge");
-            rb.velocity -= new Vector3(rb.velocity.x, 0f, rb.velocity.z);
-        }
-        if ((screenPosition.y < screenHeightBuffer) || (screenPosition.y > (mainCam.pixelHeight - screenHeightBuffer)))
-        {
-            //Debug.Log("Vertical Screen-edge");
-            rb.velocity -= new Vector3(0f, rb.velocity.y, 0f);
+            if (zPosition > (zPositionDefault + .05f) || zPosition < (zPositionDefault - .05f))
+                zPosition = Mathf.Lerp(zPosition, zPositionDefault, zPositionAcceleration * Time.deltaTime);
+            else
+                zPosition = zPositionDefault;
         }
 
         // Add force to the player ship in the form of velocity change. The
@@ -210,14 +198,19 @@ public class TestPlayerController : MonoBehaviour
         }
 
         // If the magnitude of velocity is close to zero, set it to zero.
-        if (rb.velocity.magnitude < .05f)
-            rb.velocity = Vector3.zero;
+        //if (rb.velocity.magnitude < .05f)
+        //    rb.velocity = Vector3.zero;
+
+        Vector3 viewportPosition = mainCam.WorldToViewportPoint(transform.position);
+        viewportPosition.x = Mathf.Clamp(viewportPosition.x, .1f, .9f);
+        viewportPosition.y = Mathf.Clamp(viewportPosition.y, .1f, .9f);
+        viewportPosition.z = zPosition;
+        rb.MovePosition(mainCam.ViewportToWorldPoint(viewportPosition));
     }
     private void TranslateShipMovePosition()
     {
         // Create the movement vector from the player's input and normalize it.
         Vector3 movement = (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert);
-
 
         // Change horizontal move speed when rotating ship; Move with rotation = faster, Move against rotation = slower.
         if (moveHori != 0f)
@@ -237,32 +230,32 @@ public class TestPlayerController : MonoBehaviour
         }
         else if (!isBoosting && !isBraking)
         {
-            if (transform.localPosition.z < zPositionDefault - .05f || transform.localPosition.z > zPositionDefault + .05f)
+            if (transform.localPosition.z != zPositionDefault)
             {
                 Debug.Log("Not at default position! adjust player ship until it returns to default z position!");
                 movement -= mainCam.transform.forward * (zPositionAcceleration * Mathf.Clamp((transform.localPosition.z - zPositionDefault), -1f, 1f));
             }
         }
+
         if (movement.magnitude > 1f)
             movement.Normalize();
+        if (movement.magnitude == 0f)
+            rb.velocity = Vector3.zero;
 
         // Take the final movement vector and multiply it by ShipSpeed and FixedDeltaTime,
         // add it to the dolly's position in world space, and clamp the X and Y values
         // so the ship stays in the camera's view at all times.
-        if (movement.magnitude != 0f)
-        {
-            Debug.Log("Moving!");
-            Vector3 nextpostion = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.deltaTime;
-            nextpostion = mainCam.WorldToViewportPoint(nextpostion);
-            nextpostion.x = Mathf.Clamp(nextpostion.x, .1f, .9f);
-            nextpostion.y = Mathf.Clamp(nextpostion.y, .1f, .9f);
+        Vector3 nextpostion = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.fixedDeltaTime;
+        nextpostion = mainCam.WorldToViewportPoint(nextpostion);
+        nextpostion.x = Mathf.Clamp(nextpostion.x, .15f, .85f);
+        nextpostion.y = Mathf.Clamp(nextpostion.y, .15f, .85f);
 
-            // Convert nextposition from Viewport Space Back into World Space.
-            nextpostion = mainCam.ViewportToWorldPoint(nextpostion);
+        // Convert nextposition from Viewport Space Back into World Space.
+        nextpostion = mainCam.ViewportToWorldPoint(nextpostion);
 
-            // Move the player ship to its new position.
-            rb.MovePosition(nextpostion);
-        }
+        // Move the player ship to its new position.
+        rb.MovePosition(nextpostion);
+       
     } 
 
     private void AimShip()
