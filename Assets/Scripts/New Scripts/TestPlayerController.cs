@@ -17,11 +17,6 @@ public class TestPlayerController : MonoBehaviour
     public float zPositionBrake = 5f;
     public float zPositionAcceleration = 5f;
 
-    // Variables for rotating ship when pressing bumpers.
-    private Vector3 maxLRotation = new Vector3(0f, 0f, 90f);
-    private Vector3 maxRRotation = new Vector3(0f, 0f, 270f);
-    private float bumperRotateSpeed = .2f;
-
     // Variables for movement.
     private Camera mainCam;
     private float moveHori;
@@ -29,23 +24,25 @@ public class TestPlayerController : MonoBehaviour
     private float bumperValue;
 
     [Header("Rotation Values")]
+    [Tooltip("How quickly the ship will rotate (in Degrees!) when moving. For Pitch and Yaw only!")]
     public float rotationSpeed = 5f;
-    [Tooltip("How much the player ship will rotate around the Y-Axis")]
-    public float maxYaw = 20f;
-    [Tooltip("How much the player ship will rotate around the Z-Axis")]
+    [Tooltip("How much the player ship will rotate around the X-Axis when moving.")]
     public float maxPitch = 20f;
+    [Tooltip("How much the player ship will rotate around the Y-Axis when moving.")]
+    public float maxYaw = 20f;
+    [Tooltip("How much the player ship will rotate around the Z-Axis when moving. Rotates the Ship Model instead of the Player Ship object itself!")]
+    public float maxRoll = 15f;
+    private float bumperRotateSpeed = 0.175f;
 
     // Variables used when entering triggers/collisions.
     [Header("Misc. Variables for Things")]
-    public Rigidbody rb;
+    new public Rigidbody rigidbody;
     public CameraMovement camScript;
     public int framesToHoldForCharge = 12;
     private int framesShootHeld = 0;
 
     [Header("Debug-Related")]
-    public bool useOldMovement = false;
-    public bool useRigidbodyForceMovement = false;
-    public bool useRigidbodyTranslationMovement = false;
+    public bool enableMovement = true;
 
     void Start()
     {
@@ -73,6 +70,8 @@ public class TestPlayerController : MonoBehaviour
 
     void FixedUpdate()
     {
+        if(enableMovement)
+            MoveShip();
         ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent(?) counting of frames.
     }
 
@@ -123,62 +122,62 @@ public class TestPlayerController : MonoBehaviour
         }
     }
 
+    private void MoveShip()
+    {
+        // Create the movement vector from the player's input.
+        Vector3 movement = (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert);
+
+        // Change horizontal move speed when rotating ship; Move with rotation = faster, Move against rotation = slower.
+        if (moveHori != 0f)
+            movement += mainCam.transform.right * (bumperValue * .33f);
+
+        // Normalize movement vector
+        if (movement.magnitude > 1f)
+            movement.Normalize();
+
+        // Create the new position for the player ship and clamp its XY values
+        // to keep it in the camera's view at all times
+        Vector3 nextPosition = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.fixedDeltaTime;
+        nextPosition = mainCam.WorldToViewportPoint(nextPosition);
+        nextPosition.x = Mathf.Clamp01(nextPosition.x);
+        nextPosition.y = Mathf.Clamp01(nextPosition.y);
+
+        // Convert to world space and use rigidbody MovePosition.
+        nextPosition = mainCam.ViewportToWorldPoint(nextPosition);
+        rigidbody.MovePosition(nextPosition);
+
+    }
     private void AimShip()
     {
+        // Calculate what the current Yaw and Pitch of the ship should be based
+        // on the current input values.
         float currentYaw = maxYaw * moveHori;
         float currentPitch = maxPitch * -moveVert;
 
+        // Make a new rotation from the current pitch and yaw values and 
         Quaternion newRotation = Quaternion.Euler(currentPitch, currentYaw, 0f);
-        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, newRotation, rotationSpeed);
+        transform.localRotation = Quaternion.RotateTowards(transform.localRotation, newRotation, Mathf.Deg2Rad * rotationSpeed);
     }
     private void RollShip()
     {
+        // Get the current rotation of the ship model to adjust based on if the
+        // bumpers are pressed.
+        Vector3 currentRotation = currentShip.transform.localEulerAngles;
 
-        // Rotate the ship model if the bumpers are pressed.
+        // If the right bumper is pressed, go roll all the way to the right.
         if (bumperValue == 1)
         {
-            if (currentShip.transform.localRotation.eulerAngles.z > 270.5f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, maxRRotation, bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-            }
-            else if (currentShip.transform.localRotation.eulerAngles.z < 90.5f && currentShip.transform.localRotation.eulerAngles.z > 20f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, Vector3.zero, bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-            }
-            else if (currentShip.transform.localRotation.eulerAngles.z <= 20f)
-                currentShip.transform.localRotation = Quaternion.Euler(0f, 0f, 358.5f);
+            currentShip.transform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, Mathf.LerpAngle(currentRotation.z, 270, bumperRotateSpeed));
         }
+        // If the left bumper is pressed, roll all the way to the left.
         else if (bumperValue == -1)
         {
-            if (currentShip.transform.localEulerAngles.z < 90.5f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, maxLRotation, bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-            }
-            else if (currentShip.transform.localEulerAngles.z > 269.5f && currentShip.transform.localEulerAngles.z < 340f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, new Vector3(0f, 0f, 360f), bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-            }
-            else if (currentShip.transform.localEulerAngles.z >= 340f)
-                currentShip.transform.localRotation = Quaternion.Euler(0f, 0f, 1.5f);
+            currentShip.transform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, Mathf.LerpAngle(currentRotation.z, 90, bumperRotateSpeed));
         }
+        // If no bumper is pressed, roll in the direction of movement.
         else
         {
-            if (currentShip.transform.localEulerAngles.z > 269.5f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, new Vector3(0f, 0f, 360f), bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-                if (currentShip.transform.localEulerAngles.z > 359.5f)
-                    currentShip.transform.localRotation = Quaternion.Euler(Vector3.zero);
-            }
-            else if (currentShip.transform.localEulerAngles.z < 90.5f)
-            {
-                Vector3 meshRotation = Vector3.Lerp(currentShip.transform.localRotation.eulerAngles, Vector3.zero, bumperRotateSpeed);
-                currentShip.transform.localRotation = Quaternion.Euler(meshRotation);
-            }
+            currentShip.transform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, Mathf.LerpAngle(currentRotation.z, -moveHori * maxRoll, .2f));
         }
     }
 
@@ -299,28 +298,16 @@ public class TestPlayerController : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.Z))
         {
-            // Enable Old Movement code.
-            Debug.Log("Using Transform Movement!");
-            useOldMovement = true;
-            useRigidbodyForceMovement = false;
-            useRigidbodyTranslationMovement = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.X))
-        {
-            // Enable Rigidbody.AddForce Movement code.
-            Debug.Log("Using AddForce Movement!");
-            useOldMovement = false;
-            useRigidbodyForceMovement = true;
-            useRigidbodyTranslationMovement = false;
-        }
-
-        if (Input.GetKeyDown(KeyCode.C))
-        {
-            Debug.Log("Using MovePosition Movement!");
-            useOldMovement = false;
-            useRigidbodyForceMovement = false;
-            useRigidbodyTranslationMovement = true;
+            if (enableMovement)
+            {
+                Debug.Log("Movement Disabled!");
+                enableMovement = false;
+            }
+            else
+            {
+                Debug.Log("Movement Enabled!");
+                enableMovement = true;
+            }
         }
     }
 
@@ -345,10 +332,10 @@ public class TestPlayerController : MonoBehaviour
     }
     IEnumerator shoveShip()
     {
-        rb.AddForce(transform.up * 30f, ForceMode.Impulse);
+        rigidbody.AddForce(transform.up * 30f, ForceMode.Impulse);
         yield return new WaitForSeconds(.09f);
-        rb.velocity = Vector3.zero;
-        rb.ResetInertiaTensor();
+        rigidbody.velocity = Vector3.zero;
+        rigidbody.ResetInertiaTensor();
     }
     IEnumerator getPowerup(ItemType itemType)
     {

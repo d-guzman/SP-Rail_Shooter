@@ -249,15 +249,14 @@ MonoBehaviour:
   zPositionBoost: 15
   zPositionBrake: 5
   zPositionAcceleration: 2
-  rotationSpeed: 3
-  maxYaw: 30
+  rotationSpeed: 130
   maxPitch: 20
-  rb: {fileID: 7531331}
+  maxYaw: 30
+  maxRoll: 15
+  rigidbody: {fileID: 7531331}
   camScript: {fileID: 684795030}
   framesToHoldForCharge: 10
-  useOldMovement: 1
-  useRigidbodyForceMovement: 0
-  useRigidbodyTranslationMovement: 0
+  enableMovement: 1
 --- !u!4 &7531330
 Transform:
   m_ObjectHideFlags: 0
