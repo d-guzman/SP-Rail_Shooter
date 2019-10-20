@@ -60,8 +60,9 @@ public class TestPlayerController : MonoBehaviour
 
         ManageEnergy();
 
-        PerformBumperAbility();
+        ShootWeapons();
         ShootBomb();
+        PerformBumperAbility();
 
         AimShip();
         RollShip();
@@ -72,7 +73,6 @@ public class TestPlayerController : MonoBehaviour
     {
         if(enableMovement)
             MoveShip();
-        ShootWeapons();                             // This is in FixedUpdate because I want a frame-rate independent(?) counting of frames.
     }
 
     // Private Functions
@@ -139,8 +139,7 @@ public class TestPlayerController : MonoBehaviour
         // to keep it in the camera's view at all times
         Vector3 nextPosition = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.fixedDeltaTime;
         nextPosition = mainCam.WorldToViewportPoint(nextPosition);
-        nextPosition.x = Mathf.Clamp01(nextPosition.x);
-        nextPosition.y = Mathf.Clamp01(nextPosition.y);
+        nextPosition.Set(Mathf.Clamp(nextPosition.x, .1f, .9f), Mathf.Clamp(nextPosition.y, .1f, .9f), 10f);
 
         // Convert to world space and use rigidbody MovePosition.
         nextPosition = mainCam.ViewportToWorldPoint(nextPosition);

@@ -4,115 +4,82 @@ using UnityEngine;
 
 public class CameraMovement : MonoBehaviour
 {
-    private float moveHori;
-    private float moveVert;
-    private Vector3 movement;
+    [Header("Player Ship Transform")]
+    public GameObject playerShip;
 
-    [Header("Offset Movement")]
-    public float offsetMoveSpeed = 10f;
-    private float currentSpeed;
-    public float offsetAcceleration = .2f;
+    [Header("Camera Movement Limits")]
+    [Tooltip("How far the camera move along the X-axis. For both negative and positive directions!")]
+    public float limitX = 10;
+    [Tooltip("How far the camera move along the Y-axis. For both negative and positive directions!")]
+    public float limitY = 7;
+    [Tooltip("How far back the camera will be positioned on its local Z-axis.")]
+    public float cameraOffset = -10f;
+    [Range(0f, 1f)]
+    [Tooltip("How fast the camera will keep up with the Player ship.")]
+    public float smoothDampSpeed = .2f;
 
-    [Header("Offset Limits")]
-    public float horiOffsetMax = 10f;
-    public float vertOffsetMax = 10f;
-    private float currentHoriOffset = 0f;
-    private float currentVertOffset = 0f;
 
-    private float forwardMoveSpeed;
-    [Header("Forward Movement")]
-    public float forwardMoveSpeedDefault = 50f;
-    public float forwardMoveSpeedBraking = 25f;
-    public float forwardMoveSpeedBoosting = 75f;
-    public float forwardAcceleration = 2.5f;
-    private Vector3 centralPoint;
-
-    [Header("Control Booleans")]
+    [Header("Legacy Code Support")]
     public bool isBoosting;
     public bool isBraking;
 
+    // Vectors for drawing the box that represents the camera's
+    // total range of movement at any given time.
+    private Vector3 bottomLeft;
+    private Vector3 topLeft;
+    private Vector3 bottomRight;
+    private Vector3 topRight;
+
+    // Velocity vector needed for Vector3.SmoothDamp.
+    private Vector3 velocity = Vector3.zero;
+
     void Start()
     {
-        forwardMoveSpeed = forwardMoveSpeedDefault;
-        isBoosting = false;
-        isBraking = false;
-        centralPoint = transform.position;
+        if (cameraOffset > 0f)
+        {
+            Debug.LogWarning("Camera Offset was set to be in front of player! Setting to default value (-10f)!");
+            cameraOffset = -10f;
+        }
+        if (playerShip == null)
+        {
+            Debug.LogWarning("Player Ship not set! Finding the first object with \"Player\" tag!");
+            playerShip = GameObject.FindGameObjectWithTag("Player");
+        }
+    }
+
+    void Update()
+    {
+        UpdateGizmoVectors();
+    }
+
+    private void FixedUpdate()
+    {
+        Vector3 playerShipPosition = playerShip.transform.localPosition;
+        transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(playerShipPosition.x, playerShipPosition.y, cameraOffset), ref velocity, smoothDampSpeed, Mathf.Infinity, Time.deltaTime);
     }
 
     void LateUpdate()
     {
-        // Change the forward move speed based the current action.
-        if (isBoosting)
-        {
-            if (forwardMoveSpeed < (forwardMoveSpeedBoosting - .05f))
-                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedBoosting, forwardAcceleration * Time.deltaTime);
-            else
-                forwardMoveSpeed = forwardMoveSpeedBoosting;
-        }
-        else if (isBraking)
-        {
-            if (forwardMoveSpeed > (forwardMoveSpeedBraking + .05f))
-                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedBraking, forwardAcceleration * Time.deltaTime);
-            else
-                forwardMoveSpeed = forwardMoveSpeedBraking;
-        }
-        else if (!isBoosting && !isBraking && forwardMoveSpeed != forwardMoveSpeedDefault)
-        {
-            if (forwardMoveSpeed > (forwardMoveSpeedBraking + .05f) || forwardMoveSpeed < (forwardMoveSpeedBoosting - .05f))
-                forwardMoveSpeed = Mathf.Lerp(forwardMoveSpeed, forwardMoveSpeedDefault, forwardAcceleration * Time.deltaTime);
-            else
-                forwardMoveSpeed = forwardMoveSpeedDefault;
-        }
+        Vector3 camPosition = transform.localPosition;
+        float camX = Mathf.Clamp(camPosition.x, -limitX, limitX);
+        float camY = Mathf.Clamp(camPosition.y, -limitY, limitY);
+        transform.localPosition = new Vector3(camX, camY, cameraOffset);
+    }
 
-        // --- MOVEMENT CODE ---
-        // Get input from the joystick.
-        moveHori = Input.GetAxis("Horizontal");
-        moveVert = Input.GetAxis("Vertical");
-        movement = new Vector3(moveHori, moveVert, 0f);
+    public void OnDrawGizmos()
+    {
+        Gizmos.color = Color.red;
+        Gizmos.DrawLine(bottomLeft, topLeft);
+        Gizmos.DrawLine(topLeft, topRight);
+        Gizmos.DrawLine(topRight, bottomRight);
+        Gizmos.DrawLine(bottomRight, bottomLeft);
+    }
 
-
-        // Modify the Central Point's Z-value to move the camera forward.
-        centralPoint.Set(centralPoint.x, centralPoint.y, (centralPoint.z + forwardMoveSpeed * Time.deltaTime));
-
-        // Normalize the movement vector to prevent excessive speed.
-        if (movement.magnitude > 1f)
-        {
-            movement.Normalize();
-        }
-
-
-        // Increase the camera's speed when input is detected.
-        // Decrease the camera's speed when input is not detected        
-        if (movement.magnitude == 0f)
-        {
-            currentSpeed = Mathf.Lerp(currentSpeed, 0f, offsetAcceleration * Time.deltaTime);                     // Why not a rigidbody to do this with less code? I was concerned that
-            if (currentSpeed < .1f )                                                                             // a rigidbody might have some adverse affect to the camera, even if
-            {                                                                                                   // was just a kinematic rigidbody... while that is probably is the faster
-                currentSpeed = 0f;                                                                              // (probably better) way to implement this system, I figured that this
-            }                                                                                                   // would provide a good amount of granular control that would be useful.
-        }
-        else
-        {                                                                                                       // NOTE: The reason why we slow down instead of instantly going to zero
-            currentSpeed = Mathf.Lerp(currentSpeed, offsetMoveSpeed, offsetAcceleration * Time.deltaTime);      // is because that would make movement both slow (cause of the time to
-            if (currentSpeed > offsetMoveSpeed - .1f)                                                           // build up speed) and jerky (imagine building up speed and then stopping
-            {                                                                                                   // and having to accelerate again).
-                currentSpeed = offsetMoveSpeed;
-            }
-        }
-        //Debug.Log("Current Camera Speed: " + currentSpeed);
-
-
-        // Modify the offset using the input data from this frame
-        // and clamp it to make sure we stay within a reasonable boundary.
-        currentHoriOffset += movement.x * currentSpeed * Time.deltaTime;
-        currentHoriOffset = Mathf.Clamp(currentHoriOffset, -horiOffsetMax, horiOffsetMax);
-
-        currentVertOffset += movement.y * currentSpeed * Time.deltaTime;
-        currentVertOffset = Mathf.Clamp(currentVertOffset, -vertOffsetMax, vertOffsetMax);
-        //Debug.Log(" - Current Offsets - \nHorizontal: " + currentHoriOffset + "\nVertical: " + currentVertOffset);
-
-        // Add the relevant vectors to the central point to get the camera's final position.
-        Vector3 offsetVector = new Vector3(currentHoriOffset, currentVertOffset, 0f);
-        transform.position = centralPoint + offsetVector;
+    private void UpdateGizmoVectors()
+    {
+        bottomLeft = (transform.right * -limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
+        topLeft = (transform.right * -limitX + transform.up * limitY) + (transform.forward * cameraOffset) + transform.parent.position;
+        bottomRight = (transform.right * limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
+        topRight = (transform.right * limitX + transform.up * limitY) + (transform.forward * cameraOffset) + transform.parent.position;
     }
 }
