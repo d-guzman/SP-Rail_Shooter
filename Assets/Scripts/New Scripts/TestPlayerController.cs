@@ -53,26 +53,28 @@ public class TestPlayerController : MonoBehaviour
 
     void Update()
     {
+        ManageEnergy();
+
         CheckInput_Movement();
         CheckInput_Bumpers();
         CheckInput_Boost();
         CheckInput_Brake();
 
-        ManageEnergy();
+        AimShip();
+        RollShip();
 
         ShootWeapons();
         ShootBomb();
         PerformBumperAbility();
 
-        AimShip();
-        RollShip();
         DebugKeyInputTests();
     }
 
     void FixedUpdate()
     {
-        if(enableMovement)
-            MoveShip();
+        MoveShip();
+        AimShip();
+        RollShip();
     }
 
     // Private Functions
@@ -125,7 +127,7 @@ public class TestPlayerController : MonoBehaviour
     private void MoveShip()
     {
         // Create the movement vector from the player's input.
-        Vector3 movement = (mainCam.transform.right * moveHori + mainCam.transform.up * moveVert);
+        Vector3 movement = (mainCam.transform.right * moveHori) + (mainCam.transform.up * moveVert);
 
         // Change horizontal move speed when rotating ship; Move with rotation = faster, Move against rotation = slower.
         if (moveHori != 0f)
@@ -137,9 +139,9 @@ public class TestPlayerController : MonoBehaviour
 
         // Create the new position for the player ship and clamp its XY values
         // to keep it in the camera's view at all times
-        Vector3 nextPosition = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.fixedDeltaTime;
+        Vector3 nextPosition = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.deltaTime;
         nextPosition = mainCam.WorldToViewportPoint(nextPosition);
-        nextPosition.Set(Mathf.Clamp(nextPosition.x, .1f, .9f), Mathf.Clamp(nextPosition.y, .1f, .9f), 10f);
+        nextPosition.Set(Mathf.Clamp01(nextPosition.x), Mathf.Clamp01(nextPosition.y), nextPosition.z);
 
         // Convert to world space and use rigidbody MovePosition.
         nextPosition = mainCam.ViewportToWorldPoint(nextPosition);

@@ -255,7 +255,7 @@ MonoBehaviour:
   maxRoll: 15
   rigidbody: {fileID: 7531331}
   camScript: {fileID: 684795030}
-  framesToHoldForCharge: 10
+  framesToHoldForCharge: 30
   enableMovement: 1
 --- !u!4 &7531330
 Transform:
@@ -264,7 +264,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7531328}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -280,7 +280,7 @@ Rigidbody:
   m_GameObject: {fileID: 7531328}
   serializedVersion: 2
   m_Mass: 1
-  m_Drag: 2.5
+  m_Drag: 1
   m_AngularDrag: 0.05
   m_UseGravity: 0
   m_IsKinematic: 0
@@ -2257,10 +2257,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9e63f1d739f7e01449641289796bad2f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  playerShip: {fileID: 684795029}
+  playerShip: {fileID: 7531331}
   limitX: 10
   limitY: 7
   cameraOffset: -10
+  smoothDampTime: 0.2
   isBoosting: 0
   isBraking: 0
 --- !u!1 &721138530
@@ -4740,8 +4741,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016552184}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -30.982002, y: -71, z: 4800}
-  m_LocalScale: {x: 1000, y: 10, z: 10000}
+  m_LocalPosition: {x: -30.982002, y: -71, z: 317.1}
+  m_LocalScale: {x: 600, y: 10, z: 1000}
   m_Children: []
   m_Father: {fileID: 12545016}
   m_RootOrder: 0

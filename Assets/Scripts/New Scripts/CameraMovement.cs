@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraMovement : MonoBehaviour
 {
     [Header("Player Ship Transform")]
-    public GameObject playerShip;
+    public Rigidbody playerShip;
 
     [Header("Camera Movement Limits")]
     [Tooltip("How far the camera move along the X-axis. For both negative and positive directions!")]
@@ -16,7 +16,7 @@ public class CameraMovement : MonoBehaviour
     public float cameraOffset = -10f;
     [Range(0f, 1f)]
     [Tooltip("How fast the camera will keep up with the Player ship.")]
-    public float smoothDampSpeed = .2f;
+    public float smoothDampTime = .2f;
 
 
     [Header("Legacy Code Support")]
@@ -43,7 +43,7 @@ public class CameraMovement : MonoBehaviour
         if (playerShip == null)
         {
             Debug.LogWarning("Player Ship not set! Finding the first object with \"Player\" tag!");
-            playerShip = GameObject.FindGameObjectWithTag("Player");
+            playerShip = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         }
     }
 
@@ -52,18 +52,15 @@ public class CameraMovement : MonoBehaviour
         UpdateGizmoVectors();
     }
 
-    private void FixedUpdate()
+    void FixedUpdate()
     {
-        Vector3 playerShipPosition = playerShip.transform.localPosition;
-        transform.localPosition = Vector3.SmoothDamp(transform.localPosition, new Vector3(playerShipPosition.x, playerShipPosition.y, cameraOffset), ref velocity, smoothDampSpeed, Mathf.Infinity, Time.deltaTime);
+        FollowPlayer();
+        ClampPosition();
     }
 
     void LateUpdate()
     {
-        Vector3 camPosition = transform.localPosition;
-        float camX = Mathf.Clamp(camPosition.x, -limitX, limitX);
-        float camY = Mathf.Clamp(camPosition.y, -limitY, limitY);
-        transform.localPosition = new Vector3(camX, camY, cameraOffset);
+        
     }
 
     public void OnDrawGizmos()
@@ -75,6 +72,19 @@ public class CameraMovement : MonoBehaviour
         Gizmos.DrawLine(bottomRight, bottomLeft);
     }
 
+    private void FollowPlayer()
+    {
+        Vector3 shipPosition = transform.localPosition;
+        Vector3 playerShipPosition = playerShip.transform.localPosition;
+        transform.localPosition = Vector3.SmoothDamp(shipPosition, new Vector3(playerShipPosition.x, playerShipPosition.y, shipPosition.z), ref velocity, smoothDampTime, Mathf.Infinity, Time.smoothDeltaTime);
+    }
+    private void ClampPosition()
+    {
+        Vector3 camPosition = transform.localPosition;
+        float camX = Mathf.Clamp(camPosition.x, -limitX, limitX);
+        float camY = Mathf.Clamp(camPosition.y, -limitY, limitY);
+        transform.localPosition = new Vector3(camX, camY, cameraOffset);
+    }
     private void UpdateGizmoVectors()
     {
         bottomLeft = (transform.right * -limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
