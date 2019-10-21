@@ -28,8 +28,7 @@ public class CameraFollow : MonoBehaviour
     [Range(0f, 1f)]
     public float lerpRate = .1f;
 
-
-    [Header("Legacy Code Support")]
+    [Header("Bools for Boost/Brake")]
     public bool isBoosting;
     public bool isBraking;
 

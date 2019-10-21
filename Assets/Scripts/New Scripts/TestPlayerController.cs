@@ -10,13 +10,6 @@ public class TestPlayerController : MonoBehaviour
     private int shipDataIndex = 0;
     private GameObject currentShip;
 
-    private float zPosition;
-    [Header("Boost/Brake Variables")]
-    public float zPositionDefault = 10f;
-    public float zPositionBoost = 15f;
-    public float zPositionBrake = 5f;
-    public float zPositionAcceleration = 5f;
-
     // Variables for movement.
     private Camera mainCam;
     private float moveHori;
@@ -47,7 +40,6 @@ public class TestPlayerController : MonoBehaviour
     void Start()
     {
         mainCam = Camera.main;
-        zPosition = zPositionDefault;
         SetupShip();
     }
 
@@ -99,12 +91,10 @@ public class TestPlayerController : MonoBehaviour
         // Can't boost if already braking.
         if (Input.GetButtonDown("Boost") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking))
         {
-            camScript.isBoosting = true;        // still need this cause the camera needs references to the shipdata (fuck).
             shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
         }
         else if (Input.GetButtonUp("Boost"))
         {
-            camScript.isBoosting = false;
             shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
         }
     }
@@ -114,12 +104,10 @@ public class TestPlayerController : MonoBehaviour
         // Can't brake if already boosting.
         if (Input.GetButtonDown("Brake") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting))
         {
-            camScript.isBraking = true;
             shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
         }
         else if (Input.GetButtonUp("Brake"))
         {
-            camScript.isBraking = false;
             shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
         }
     }
@@ -215,8 +203,6 @@ public class TestPlayerController : MonoBehaviour
             {
                 shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
                 shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
-                camScript.isBoosting = false;
-                camScript.isBraking = false;
             }
         }
     }
