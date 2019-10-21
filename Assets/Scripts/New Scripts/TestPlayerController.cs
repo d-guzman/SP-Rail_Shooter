@@ -37,7 +37,7 @@ public class TestPlayerController : MonoBehaviour
     // Variables used when entering triggers/collisions.
     [Header("Misc. Variables for Things")]
     new public Rigidbody rigidbody;
-    public CameraMovement camScript;
+    public CameraFollow camScript;
     public int framesToHoldForCharge = 12;
     private int framesShootHeld = 0;
 
@@ -141,7 +141,7 @@ public class TestPlayerController : MonoBehaviour
         // to keep it in the camera's view at all times
         Vector3 nextPosition = transform.position + movement * shipData[shipDataIndex].ShipSpeed * Time.deltaTime;
         nextPosition = mainCam.WorldToViewportPoint(nextPosition);
-        nextPosition.Set(Mathf.Clamp01(nextPosition.x), Mathf.Clamp01(nextPosition.y), nextPosition.z);
+        nextPosition.Set(Mathf.Clamp(nextPosition.x, .1f, .9f), Mathf.Clamp(nextPosition.y, .1f, .9f), nextPosition.z);
 
         // Convert to world space and use rigidbody MovePosition.
         nextPosition = mainCam.ViewportToWorldPoint(nextPosition);

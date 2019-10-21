@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CameraMovement : MonoBehaviour
+public class CameraFollow : MonoBehaviour
 {
     [Header("Player Ship Transform")]
     public Rigidbody playerShip;
