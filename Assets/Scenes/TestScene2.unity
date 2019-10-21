@@ -311,7 +311,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 12545015}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 30.982002, y: 55.57959, z: 159.6}
+  m_LocalPosition: {x: 30.982002, y: 65.57959, z: 159.6}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 2016552188}
@@ -468,7 +468,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 4
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &75506649
 PrefabInstance:
@@ -2258,10 +2258,13 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   playerShip: {fileID: 7531331}
-  limitX: 10
+  limitX: 12
   limitY: 7
   cameraOffset: -10
+  enableFollowCam: 0
   smoothDampTime: 0.2
+  maxSpeed: 13
+  lerpRate: 0.07
   isBoosting: 0
   isBraking: 0
 --- !u!1 &721138530
@@ -3086,7 +3089,7 @@ RectTransform:
   - {fileID: 92088628}
   - {fileID: 374669787}
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -3957,6 +3960,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1475935814}
   - component: {fileID: 1475935815}
+  - component: {fileID: 1475935816}
   m_Layer: 0
   m_Name: Player Dolly
   m_TagString: Untagged
@@ -3971,8 +3975,8 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1475935813}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalRotation: {x: 0, y: 0.4214522, z: 0, w: 0.90685064}
+  m_LocalPosition: {x: 1, y: 10, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 7531330}
@@ -3987,12 +3991,29 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1475935813}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c69cd8be3f4da3241b784e47477dd976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 10
+  moveSpeed: 18
+--- !u!114 &1475935816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1475935813}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 99a9c787e5d1bbf48a389834c4a9641c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Path: {fileID: 1781180090}
+  m_UpdateMethod: 0
+  m_PositionUnits: 1
+  m_Speed: 18
+  m_Position: 0
 --- !u!1 &1537550812
 GameObject:
   m_ObjectHideFlags: 0
@@ -4529,7 +4550,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1706493500}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.2253065, y: 0.34538, z: 278}
+  m_LocalPosition: {x: -4.2253065, y: 10.34538, z: 278}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 736428771}
@@ -4541,7 +4562,75 @@ Transform:
   - {fileID: 339581839}
   - {fileID: 158658057}
   m_Father: {fileID: 0}
-  m_RootOrder: 5
+  m_RootOrder: 6
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1781180089
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1781180091}
+  - component: {fileID: 1781180090}
+  m_Layer: 0
+  m_Name: Dolly Track
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1781180090
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781180089}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a200b19ca1a9685429ed7e043c28e904, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_Resolution: 19
+  m_Appearance:
+    pathColor: {r: 0, g: 1, b: 0, a: 1}
+    inactivePathColor: {r: 0.5, g: 0.5, b: 0.5, a: 1}
+    width: 5
+  m_Looped: 1
+  m_Waypoints:
+  - position: {x: 1, y: 0, z: 0}
+    roll: 0
+  - position: {x: 18.088066, y: 0, z: 71.6852}
+    roll: 0
+  - position: {x: 23.842785, y: 0, z: 158.69812}
+    roll: 0
+  - position: {x: 25.5, y: 0, z: 365.5}
+    roll: 0
+  - position: {x: -20.364079, y: 0, z: 471.96948}
+    roll: 0
+  - position: {x: -76.6978, y: 0, z: 442.0411}
+    roll: 0
+  - position: {x: -27.328903, y: 0, z: 351.93738}
+    roll: 0
+  - position: {x: -32.95878, y: 0, z: 156.67207}
+    roll: 0
+  - position: {x: -65.03061, y: 0, z: 11.722244}
+    roll: 0
+--- !u!4 &1781180091
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1781180089}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 10, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1853309434
 GameObject:
@@ -4658,7 +4747,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1972356722}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0.9, z: 272.3}
+  m_LocalPosition: {x: 0, y: 10.9, z: 272.3}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 587694026}
@@ -4668,7 +4757,7 @@ Transform:
   - {fileID: 1174463141}
   - {fileID: 1188017979}
   m_Father: {fileID: 0}
-  m_RootOrder: 6
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2016552184
 GameObject:
@@ -4755,7 +4844,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2016552184}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -30.982002, y: -71, z: 317.1}
+  m_LocalPosition: {x: -30.982002, y: -71, z: 207.65}
   m_LocalScale: {x: 600, y: 10, z: 1000}
   m_Children: []
   m_Father: {fileID: 12545016}

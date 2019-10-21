@@ -17,7 +17,7 @@ MonoBehaviour:
     type: 3}
   ShipHealth: 120
   ShipEnergy: 200
-  ShipSpeed: 12.5
+  ShipSpeed: 18
   ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
     type: 3}
   ShipBombCount: 3

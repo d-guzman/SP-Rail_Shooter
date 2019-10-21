@@ -7,16 +7,26 @@ public class CameraFollow : MonoBehaviour
     [Header("Player Ship Transform")]
     public Rigidbody playerShip;
 
-    [Header("Camera Movement Limits")]
+    [Header("Camera Limits")]
     [Tooltip("How far the camera move along the X-axis. For both negative and positive directions!")]
     public float limitX = 10;
     [Tooltip("How far the camera move along the Y-axis. For both negative and positive directions!")]
     public float limitY = 7;
     [Tooltip("How far back the camera will be positioned on its local Z-axis.")]
     public float cameraOffset = -10f;
+
+    [Header("Follow Camera Variables")]
+    [Tooltip("If enabled, the camera will behave as a follow camera for the player ship, instead of moving on its own.")]
+    public bool enableFollowCam = false;
     [Range(0f, 1f)]
     [Tooltip("How fast the camera will keep up with the Player ship.")]
     public float smoothDampTime = .2f;
+
+    [Header("Movement Variables")]
+    public float maxSpeed = 10f;
+    private float currentSpeed = 0f;
+    [Range(0f, 1f)]
+    public float lerpRate = .1f;
 
 
     [Header("Legacy Code Support")]
@@ -54,13 +64,18 @@ public class CameraFollow : MonoBehaviour
 
     void FixedUpdate()
     {
-        FollowPlayer();
-        ClampPosition();
+        if (enableFollowCam)
+        {
+            FollowPlayer();
+            ClampPosition();
+        }
+        if (!enableFollowCam)
+            MoveCamera();
     }
 
     void LateUpdate()
     {
-        
+
     }
 
     public void OnDrawGizmos()
@@ -85,6 +100,38 @@ public class CameraFollow : MonoBehaviour
         float camY = Mathf.Clamp(camPosition.y, -limitY, limitY);
         transform.localPosition = new Vector3(camX, camY, cameraOffset);
     }
+
+    private void MoveCamera()
+    {
+        // Get player input.
+        float moveHori = Input.GetAxis("Horizontal");
+        float moveVert = Input.GetAxis("Vertical");
+
+        // Create movement vector and normalize it.
+        Vector3 movement = new Vector3(moveHori, moveVert, 0f);
+        if (movement.magnitude > 1f)
+            movement.Normalize();
+
+        // Adjust camera's currentSpeed based on if the player is moving.
+        if (movement.magnitude != 0f)
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, maxSpeed, lerpRate * movement.magnitude);
+        }
+        else
+        {
+            currentSpeed = Mathf.Lerp(currentSpeed, 0f, lerpRate);
+        }
+
+        // Create a new vector representing the next position of the camera.
+        Vector3 nextPosition = transform.localPosition + movement * currentSpeed * Time.fixedDeltaTime;
+
+        // Clamp it to stay within boundaries.
+        nextPosition.Set(Mathf.Clamp(nextPosition.x, -limitX, limitX), Mathf.Clamp(nextPosition.y, -limitY, limitY), cameraOffset);
+
+        // Set camera to new position.
+        transform.localPosition = nextPosition;
+    }
+
     private void UpdateGizmoVectors()
     {
         bottomLeft = (transform.right * -limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
