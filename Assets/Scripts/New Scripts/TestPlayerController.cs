@@ -139,7 +139,7 @@ public class TestPlayerController : MonoBehaviour
 
         // Change horizontal move speed when rotating ship; Move with rotation = faster, Move against rotation = slower.
         if (moveHori != 0f)
-            movement += mainCam.transform.right * (bumperValue * .33f);
+            movement += mainCam.transform.right * (bumperValue * .20f);
 
         // Normalize movement vector
         if (movement.magnitude > 1f)
