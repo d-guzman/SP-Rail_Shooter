@@ -12,8 +12,16 @@ public class CameraFollow : MonoBehaviour
     public float limitX = 10;
     [Tooltip("How far the camera move along the Y-axis. For both negative and positive directions!")]
     public float limitY = 7;
-    [Tooltip("How far back the camera will be positioned on its local Z-axis.")]
+    [Tooltip("How far back the camera will be positioned on its local Z-axis when not boosting or braking.")]
     public float cameraOffset = -10f;
+    [Tooltip("How far back the camera will be position on its local Z-axis when boosting.")]
+    public float cameraOffsetBoost = -15f;
+    [Tooltip("How far back the camera will be position on its local Z-axis when braking.")]
+    public float cameraOffsetBrake = -5f;
+    [Tooltip("How quickly the camera will adjust its offset.")]
+    public float offsetStepSpeed = .2f;
+    private float currentCameraOffset;
+    
 
     [Header("Follow Camera Variables")]
     [Tooltip("If enabled, the camera will behave as a follow camera for the player ship, instead of moving on its own.")]
@@ -54,11 +62,18 @@ public class CameraFollow : MonoBehaviour
             Debug.LogWarning("Player Ship not set! Finding the first object with \"Player\" tag!");
             playerShip = GameObject.FindGameObjectWithTag("Player").GetComponent<Rigidbody>();
         }
+        currentCameraOffset = cameraOffset;
     }
 
     void Update()
     {
         UpdateGizmoVectors();
+        if (isBoosting)
+            currentCameraOffset = Mathf.SmoothStep(currentCameraOffset, cameraOffsetBoost, offsetStepSpeed);
+        else if (isBraking)
+            currentCameraOffset = Mathf.SmoothStep(currentCameraOffset, cameraOffsetBrake, offsetStepSpeed);
+        else
+            currentCameraOffset = Mathf.SmoothStep(currentCameraOffset, cameraOffset, offsetStepSpeed);
     }
 
     void FixedUpdate()
@@ -70,11 +85,6 @@ public class CameraFollow : MonoBehaviour
         }
         if (!enableFollowCam)
             MoveCamera();
-    }
-
-    void LateUpdate()
-    {
-
     }
 
     public void OnDrawGizmos()
@@ -97,7 +107,7 @@ public class CameraFollow : MonoBehaviour
         Vector3 camPosition = transform.localPosition;
         float camX = Mathf.Clamp(camPosition.x, -limitX, limitX);
         float camY = Mathf.Clamp(camPosition.y, -limitY, limitY);
-        transform.localPosition = new Vector3(camX, camY, cameraOffset);
+        transform.localPosition = new Vector3(camX, camY, currentCameraOffset);
     }
 
     private void MoveCamera()
@@ -125,7 +135,7 @@ public class CameraFollow : MonoBehaviour
         Vector3 nextPosition = transform.localPosition + movement * currentSpeed * Time.fixedDeltaTime;
 
         // Clamp it to stay within boundaries.
-        nextPosition.Set(Mathf.Clamp(nextPosition.x, -limitX, limitX), Mathf.Clamp(nextPosition.y, -limitY, limitY), cameraOffset);
+        nextPosition.Set(Mathf.Clamp(nextPosition.x, -limitX, limitX), Mathf.Clamp(nextPosition.y, -limitY, limitY), currentCameraOffset);
 
         // Set camera to new position.
         transform.localPosition = nextPosition;
@@ -133,9 +143,9 @@ public class CameraFollow : MonoBehaviour
 
     private void UpdateGizmoVectors()
     {
-        bottomLeft = (transform.right * -limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
-        topLeft = (transform.right * -limitX + transform.up * limitY) + (transform.forward * cameraOffset) + transform.parent.position;
-        bottomRight = (transform.right * limitX + transform.up * -limitY) + (transform.forward * cameraOffset) + transform.parent.position;
-        topRight = (transform.right * limitX + transform.up * limitY) + (transform.forward * cameraOffset) + transform.parent.position;
+        bottomLeft = (transform.right * -limitX + transform.up * -limitY) + (transform.forward * currentCameraOffset) + transform.parent.position;
+        topLeft = (transform.right * -limitX + transform.up * limitY) + (transform.forward * currentCameraOffset) + transform.parent.position;
+        bottomRight = (transform.right * limitX + transform.up * -limitY) + (transform.forward * currentCameraOffset) + transform.parent.position;
+        topRight = (transform.right * limitX + transform.up * limitY) + (transform.forward * currentCameraOffset) + transform.parent.position;
     }
 }

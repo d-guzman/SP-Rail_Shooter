@@ -10,11 +10,13 @@ public class TestPlayerController : MonoBehaviour
     private int shipDataIndex = 0;
     private GameObject currentShip;
 
+    
     // Variables for movement.
     private Camera mainCam;
     private float moveHori;
     private float moveVert;
     private float bumperValue;
+
 
     [Header("Rotation Values")]
     [Tooltip("How quickly the ship will rotate (in Degrees!) when moving. For Pitch and Yaw only!")]
@@ -27,12 +29,15 @@ public class TestPlayerController : MonoBehaviour
     public float maxRoll = 15f;
     private float bumperRotateSpeed = 0.175f;
 
+
     // Variables used when entering triggers/collisions.
     [Header("Misc. Variables for Things")]
     new public Rigidbody rigidbody;
     public CameraFollow camScript;
+    public DollyController dollyScript;
     public int framesToHoldForCharge = 12;
     private int framesShootHeld = 0;
+
 
     [Header("Debug-Related")]
     public bool enableMovement = true;
@@ -81,10 +86,14 @@ public class TestPlayerController : MonoBehaviour
         moveVert = Input.GetAxis("Vertical");
         moveHori = Input.GetAxis("Horizontal");
     }
+
+
     private void CheckInput_Bumpers()
     {
         bumperValue = Input.GetAxis("Rotate");
     }
+
+
     private void CheckInput_Boost()
     {
         // --- CHECK BOOST INPUT CODE ---
@@ -92,12 +101,18 @@ public class TestPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Boost") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBraking))
         {
             shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
+            camScript.isBoosting = true;
+            dollyScript.isBoosting = true;
         }
         else if (Input.GetButtonUp("Boost"))
         {
             shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
+            camScript.isBoosting = false;
+            dollyScript.isBoosting = false;
         }
     }
+
+
     private void CheckInput_Brake()
     {
         // --- CHECK BRAKE INPUT CODE ---
@@ -105,12 +120,17 @@ public class TestPlayerController : MonoBehaviour
         if (Input.GetButtonDown("Brake") && !shipData[shipDataIndex].CheckStateFlag<ShipState>(shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting))
         {
             shipData[shipDataIndex].SetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+            camScript.isBraking = true;
+            dollyScript.isBraking = true;
         }
         else if (Input.GetButtonUp("Brake"))
         {
             shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+            camScript.isBraking = false;
+            dollyScript.isBraking = false;
         }
     }
+
 
     private void MoveShip()
     {
@@ -136,6 +156,8 @@ public class TestPlayerController : MonoBehaviour
         rigidbody.MovePosition(nextPosition);
 
     }
+
+
     private void AimShip()
     {
         // Calculate what the current Yaw and Pitch of the ship should be based
@@ -147,6 +169,8 @@ public class TestPlayerController : MonoBehaviour
         Quaternion newRotation = Quaternion.Euler(currentPitch, currentYaw, 0f);
         transform.localRotation = Quaternion.RotateTowards(transform.localRotation, newRotation, Mathf.Deg2Rad * rotationSpeed);
     }
+
+
     private void RollShip()
     {
         // Get the current rotation of the ship model to adjust based on if the
@@ -169,6 +193,7 @@ public class TestPlayerController : MonoBehaviour
             currentShip.transform.localEulerAngles = new Vector3(currentRotation.x, currentRotation.y, Mathf.LerpAngle(currentRotation.z, -moveHori * maxRoll, .2f));
         }
     }
+
 
     private void ManageEnergy()
     {
@@ -203,9 +228,16 @@ public class TestPlayerController : MonoBehaviour
             {
                 shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBoosting);
                 shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.isBraking);
+
+                camScript.isBoosting = false;
+                camScript.isBraking = false;
+                dollyScript.isBoosting = false;
+                dollyScript.isBraking = false;
             }
         }
     }
+
+
     private void PerformBumperAbility()
     {
         if (Input.GetButtonDown("Rotate"))
@@ -217,6 +249,7 @@ public class TestPlayerController : MonoBehaviour
             }
         }
     }
+
 
     private void ShootWeapons()
     {
@@ -237,6 +270,8 @@ public class TestPlayerController : MonoBehaviour
             framesShootHeld = 0;
         }
     }
+
+
     private void ShootBomb()
     {
         if (Input.GetButtonDown("Bomb"))
@@ -251,6 +286,7 @@ public class TestPlayerController : MonoBehaviour
                 Debug.Log("Bomb Button pressed. No more bombs...");
         }
     }
+
 
     private void DebugKeyInputTests()
     { 
@@ -317,6 +353,8 @@ public class TestPlayerController : MonoBehaviour
         yield return new WaitForSeconds((waitTime / 60));
         shipData[shipDataIndex].UnsetStateFlag<ShipState>(ref shipData[shipDataIndex].runtimeShipState, ShipState.gotHit);
     }
+
+
     IEnumerator shoveShip()
     {
         rigidbody.AddForce(transform.up * 30f, ForceMode.Impulse);
@@ -324,6 +362,8 @@ public class TestPlayerController : MonoBehaviour
         rigidbody.velocity = Vector3.zero;
         rigidbody.ResetInertiaTensor();
     }
+
+
     IEnumerator getPowerup(ItemType itemType)
     {
         yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
@@ -371,6 +411,8 @@ public class TestPlayerController : MonoBehaviour
             }
         }
     }
+
+
     void OnCollisionEnter(Collision collision)
     {
         if (collision.gameObject.tag == "Ground")
