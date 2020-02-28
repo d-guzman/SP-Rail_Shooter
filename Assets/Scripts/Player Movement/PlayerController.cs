@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Events;
 
-public class TestPlayerController : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
     // Variables for Ship Management.
     public PlayerShipData[] shipData;
