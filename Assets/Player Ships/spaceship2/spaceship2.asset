@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0d56456c6b2b04882638c9a3925cc4, type: 3}
+  m_Name: spaceship2
+  m_EditorClassIdentifier: 
+  ShipName: spaceship2
+  ShipModel: {fileID: 8138723989710169064, guid: 55ae3228442d62d4cb89808041c6cf63,
+    type: 3}
+  ShipHealth: 90
+  ShipEnergy: 160
+  ShipSpeed: 20
+  ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
+    type: 3}
+  ShipBombCount: 3
+  BumperAbilityCost: 40
+  BaseBullet: {fileID: 5422477816337664186, guid: 2162934f9202ead4cb370850a856b7c8,
+    type: 3}
+  MaxBullet: {fileID: 8330066392514304643, guid: 8c8f368195cde564b9fc672b47240eed,
+    type: 3}
+  ShootingSounds:
+  - {fileID: 8300000, guid: 48df88dc58e66d24185a528a4afa5c2e, type: 3}
+  - {fileID: 8300000, guid: 405bd0f4c6dceee488cc8a2d4613a58a, type: 3}
+  UpdateFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  ShootFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  ChargeFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BumperFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BombFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
