@@ -37,6 +37,7 @@ public class PlayerController : MonoBehaviour
     public DollyController dollyScript;
     public int framesToHoldForCharge = 12;
     private int framesShootHeld = 0;
+    private bool canSwapShip = true;
 
 
     [Header("Debug-Related")]
@@ -57,12 +58,13 @@ public class PlayerController : MonoBehaviour
         CheckInput_Boost();
         CheckInput_Brake();
 
-        AimShip();
         RollShip();
 
         ShootWeapons();
         ShootBomb();
         PerformBumperAbility();
+
+        SwapShip();
 
         DebugKeyInputTests();
     }
@@ -287,6 +289,22 @@ public class PlayerController : MonoBehaviour
         }
     }
 
+    private void SwapShip()
+    {
+        int swapValue = (int)Input.GetAxis("ShipSwap");
+        if (swapValue != 0 && canSwapShip)
+        {
+            canSwapShip = false;
+            shipData[shipDataIndex].EventCleanup();
+            shipDataIndex = (shipDataIndex + 1) % 2;
+            Destroy(currentShip);
+            Invoke("SetupShip", (1 / 60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
+        }
+        else if (swapValue == 0)
+        {
+            canSwapShip = true;
+        }
+    }
 
     private void DebugKeyInputTests()
     { 
@@ -310,6 +328,7 @@ public class PlayerController : MonoBehaviour
             Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
         }
 
+        /*
         if (Input.GetKeyDown(KeyCode.Tab))
         {
             Debug.Log("Destroying and replacing ship!");
@@ -318,7 +337,8 @@ public class PlayerController : MonoBehaviour
             Destroy(currentShip);
             Invoke("SetupShip", (1 / 60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
         }
-
+        */
+        
         if (Input.GetKeyDown(KeyCode.Z))
         {
             if (enableMovement)

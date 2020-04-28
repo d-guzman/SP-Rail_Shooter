@@ -14,7 +14,7 @@ public class Spaceship2Script : PlayerShip
             switch (ShipData.runtimeWeaponLevel)
             {
                 case 1:
-                    tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                    tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.rotation);
                     tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[0], .5f);
                     break;
                 case 2:
@@ -42,7 +42,7 @@ public class Spaceship2Script : PlayerShip
     {
         for (int i = 0; i < 3; i++)
         {
-            tempBullet = Instantiate(bulletType, point.transform.position, point.transform.parent.rotation);
+            tempBullet = Instantiate(bulletType, point.transform.position, point.transform.rotation);
             tempBullet.GetComponent<BulletScript>().bulletSetup(sound, .5f);
             yield return new WaitForSeconds(.1f);
         }

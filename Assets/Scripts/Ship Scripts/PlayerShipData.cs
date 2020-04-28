@@ -55,6 +55,7 @@ public class PlayerShipData : ScriptableObject, ISerializationCallbackReceiver
     // Replace with a list if so desired.
     public GameObject BaseBullet;
     public GameObject MaxBullet;
+    public GameObject ChargeProjectile;
     public List<AudioClip> ShootingSounds;
 
     [HideInInspector()]
