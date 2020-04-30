@@ -58,7 +58,7 @@ public class PlayerController : MonoBehaviour
         CheckInput_Boost();
         CheckInput_Brake();
 
-        RollShip();
+        //RollShip();
 
         ShootWeapons();
         ShootBomb();
