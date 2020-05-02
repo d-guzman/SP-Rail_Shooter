@@ -17,7 +17,7 @@ MonoBehaviour:
     type: 3}
   ShipHealth: 90
   ShipEnergy: 160
-  ShipSpeed: 20
+  ShipSpeed: 25
   ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
     type: 3}
   ShipBombCount: 3
@@ -26,6 +26,7 @@ MonoBehaviour:
     type: 3}
   MaxBullet: {fileID: 8330066392514304643, guid: 8c8f368195cde564b9fc672b47240eed,
     type: 3}
+  ChargeProjectile: {fileID: 0}
   ShootingSounds:
   - {fileID: 8300000, guid: 48df88dc58e66d24185a528a4afa5c2e, type: 3}
   - {fileID: 8300000, guid: 405bd0f4c6dceee488cc8a2d4613a58a, type: 3}

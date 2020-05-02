@@ -15,6 +15,7 @@ TagManager:
   - BombPickup
   - BombSpawn_Player
   - Explosion
+  - Shield
   layers:
   - Default
   - TransparentFX

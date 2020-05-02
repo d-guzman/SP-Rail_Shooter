@@ -44,6 +44,7 @@ public class BulletScript : MonoBehaviour {
         else if (other.gameObject.tag == "EnemyShip")
         {
             onCollide();
+            // Replace with code to deal damage to a ship
             Destroy(other.transform.parent.gameObject);
         }
 
