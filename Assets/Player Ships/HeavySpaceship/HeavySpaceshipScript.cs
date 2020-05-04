@@ -5,8 +5,13 @@ using UnityEngine;
 public class HeavySpaceshipScript : PlayerShip
 {
     public float timeBetweenShots = 1f;
+    public float beamUptime = 1f;
+    public float timeBetweenBeams = 1.5f;
     public float shieldDuration = 3f;
     public GameObject Shield;
+    public GameObject LaserBeam;
+    public LineRenderer LaserRenderer;
+    public Material[] BeamMaterials;
     private bool canShoot = true;
     private bool canShield = true;
     public override void UpdateWeapons()
@@ -28,10 +33,14 @@ public class HeavySpaceshipScript : PlayerShip
                     StartCoroutine(DelayAfterShooting(timeBetweenShots));
                     break;
                 case 2:
-                    Debug.Log("Imagine a cool laser!");
+                    StartCoroutine(BeamRoutine(beamUptime));
+                    StartCoroutine(DelayAfterShooting(timeBetweenBeams));
+                    LaserRenderer.material = BeamMaterials[0];
                     break;
                 case 3:
-                    Debug.Log("Imagine an even cooler laser! That pierces ships too!");
+                    StartCoroutine(BeamRoutine(beamUptime));
+                    StartCoroutine(DelayAfterShooting(timeBetweenBeams));
+                    LaserRenderer.material = BeamMaterials[1];
                     break;
             }
         }
@@ -64,5 +73,12 @@ public class HeavySpaceshipScript : PlayerShip
         yield return new WaitForSeconds(shieldTime);
         canShield = true;
         Shield.SetActive(false);
+    }
+
+    IEnumerator BeamRoutine(float uptime)
+    {
+        LaserBeam.SetActive(true);
+        yield return new WaitForSeconds(uptime);
+        LaserBeam.SetActive(false);
     }
 }

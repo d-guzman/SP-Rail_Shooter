@@ -336,6 +336,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1 (5)
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -580,6 +585,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (2)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -1156,6 +1166,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (11)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1254,6 +1269,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (3)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -1527,6 +1547,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (12)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1605,6 +1630,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Tower1 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
@@ -3068,6 +3098,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -3263,6 +3298,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (5)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -5061,6 +5101,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6116,6 +6161,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (13)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6655,6 +6705,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -6990,6 +7045,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (9)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -7779,6 +7839,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (14)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -8130,6 +8195,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (8)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -9095,6 +9165,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1 (3)
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9231,6 +9306,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1 (2)
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9325,6 +9405,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9414,6 +9499,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (7)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -9748,6 +9838,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (1)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -9962,6 +10057,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Building1 (6)
+      objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
@@ -10457,6 +10557,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Building1 (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 1448163910167023053, guid: d4e7070bbb5552045b5b434c7ac5fa61,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 6982701134630864426, guid: d4e7070bbb5552045b5b434c7ac5fa61,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10565,6 +10670,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Tower1
       objectReference: {fileID: 0}
+    - target: {fileID: 4650952625922784338, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_Layer
+      value: 10
+      objectReference: {fileID: 0}
     - target: {fileID: 2559512616603052466, guid: 5f90a3c14b5f73d4e9e0af989178c700,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -10644,6 +10754,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_IsTrigger
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6048082966320991174, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6048082966320991174, guid: 5f90a3c14b5f73d4e9e0af989178c700,
+        type: 3}
+      propertyPath: m_SelectedVertices.Array.data[0]
+      value: 162
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 5f90a3c14b5f73d4e9e0af989178c700, type: 3}
