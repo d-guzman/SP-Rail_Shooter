@@ -249,7 +249,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   shipData:
-  - {fileID: 11400000, guid: 060308fe9eb6de14b96897aa8a036578, type: 2}
+  - {fileID: 11400000, guid: 7804f789964852e4d9a9e5a52423e003, type: 2}
   - {fileID: 11400000, guid: cc064bb0a6704f948b44f8e26ca6cea2, type: 2}
   rotationSpeed: 120
   maxPitch: 20
@@ -5994,7 +5994,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   selectedShips:
-  - {fileID: 11400000, guid: 060308fe9eb6de14b96897aa8a036578, type: 2}
+  - {fileID: 11400000, guid: 7804f789964852e4d9a9e5a52423e003, type: 2}
   - {fileID: 11400000, guid: cc064bb0a6704f948b44f8e26ca6cea2, type: 2}
   healthText: {fileID: 1547719200}
   energyText: {fileID: 1027311303}

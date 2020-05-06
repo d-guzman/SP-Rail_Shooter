@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7a0d56456c6b2b04882638c9a3925cc4, type: 3}
+  m_Name: MediumSpaceship
+  m_EditorClassIdentifier: 
+  ShipName: Medium Spaceship
+  ShipModel: {fileID: 7334872308392998063, guid: 96afb9928e49bc1448d2a45dc03f4d51,
+    type: 3}
+  ShipHealth: 120
+  ShipEnergy: 200
+  ShipSpeed: 22
+  ShipBomb: {fileID: 7758053815755677671, guid: ee889d130f8773a4b9175fd1603123d8,
+    type: 3}
+  ShipBombCount: 3
+  BumperAbilityCost: 90
+  BaseBullet: {fileID: 1030251944786134, guid: c27d52ac871fb2b4f9bb87ef79503d22, type: 3}
+  MaxBullet: {fileID: 1030251944786134, guid: 0797335d8604ecf4d85ddddf60ed62ca, type: 3}
+  ChargeProjectile: {fileID: 0}
+  ShootingSounds:
+  - {fileID: 8300000, guid: 48df88dc58e66d24185a528a4afa5c2e, type: 3}
+  - {fileID: 8300000, guid: e94c309d9979d6a4aaa786420c5f6936, type: 3}
+  - {fileID: 8300000, guid: 405bd0f4c6dceee488cc8a2d4613a58a, type: 3}
+  UpdateFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  ShootFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  ChargeFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BumperFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null
+  BombFunction:
+    m_PersistentCalls:
+      m_Calls: []
+    m_TypeName: UnityEngine.Events.UnityEvent, UnityEngine.CoreModule, Version=0.0.0.0,
+      Culture=neutral, PublicKeyToken=null

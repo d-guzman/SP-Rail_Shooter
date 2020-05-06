@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class DummyShipScript : PlayerShip
+public class MediumSpaceshipScript : PlayerShip
 {
     private float rotationSpeed = 18f;
 
@@ -15,19 +15,11 @@ public class DummyShipScript : PlayerShip
                 shootPoints[0].SetActive(false);
                 shootPoints[1].SetActive(false);
                 shootPoints[2].SetActive(true);
-
-                shootPoints[0].transform.parent.gameObject.SetActive(false);
-                shootPoints[1].transform.parent.gameObject.SetActive(false);
-                shootPoints[2].transform.parent.gameObject.SetActive(true);
                 break;
             default:
                 shootPoints[0].SetActive(true);
                 shootPoints[1].SetActive(true);
                 shootPoints[2].SetActive(false);
-
-                shootPoints[0].transform.parent.gameObject.SetActive(true);
-                shootPoints[1].transform.parent.gameObject.SetActive(true);
-                shootPoints[2].transform.parent.gameObject.SetActive(false);
                 break;
         }
         
@@ -42,15 +34,15 @@ public class DummyShipScript : PlayerShip
                 switch (ShipData.runtimeWeaponLevel)
                 {
                     case 1:
-                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.rotation);
                         tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[0], 1f);
                         break;
                     case 2:
-                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet = Instantiate(ShipData.BaseBullet, point.transform.position, point.transform.rotation);
                         tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[1], .6f);
                         break;
                     case 3:
-                        tempBullet = Instantiate(ShipData.MaxBullet, point.transform.position, point.transform.parent.rotation);
+                        tempBullet = Instantiate(ShipData.MaxBullet, point.transform.position, point.transform.rotation);
                         tempBullet.GetComponent<BulletScript>().bulletSetup(ShipData.ShootingSounds[2], .6f);
                         break;
                 }
