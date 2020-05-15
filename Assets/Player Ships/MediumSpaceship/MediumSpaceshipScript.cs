@@ -12,14 +12,14 @@ public class MediumSpaceshipScript : PlayerShip
         switch (ShipData.runtimeWeaponLevel)
         {
             case 1:
-                shootPoints[0].SetActive(false);
+                shootPoints[0].SetActive(true);
                 shootPoints[1].SetActive(false);
-                shootPoints[2].SetActive(true);
+                shootPoints[2].SetActive(false);
                 break;
             default:
-                shootPoints[0].SetActive(true);
+                shootPoints[0].SetActive(false);
                 shootPoints[1].SetActive(true);
-                shootPoints[2].SetActive(false);
+                shootPoints[2].SetActive(true);
                 break;
         }
         

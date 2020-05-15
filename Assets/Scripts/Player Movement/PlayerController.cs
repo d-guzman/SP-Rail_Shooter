@@ -292,6 +292,9 @@ public class PlayerController : MonoBehaviour
     private void SwapShip()
     {
         int swapValue = (int)Input.GetAxis("ShipSwap");
+
+        Debug.Log(swapValue);
+
         if (swapValue != 0 && canSwapShip)
         {
             canSwapShip = false;
