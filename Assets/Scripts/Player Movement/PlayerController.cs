@@ -58,8 +58,6 @@ public class PlayerController : MonoBehaviour
         CheckInput_Boost();
         CheckInput_Brake();
 
-        //RollShip();
-
         ShootWeapons();
         ShootBomb();
         PerformBumperAbility();
@@ -293,8 +291,6 @@ public class PlayerController : MonoBehaviour
     {
         int swapValue = (int)Input.GetAxis("ShipSwap");
 
-        Debug.Log(swapValue);
-
         if (swapValue != 0 && canSwapShip)
         {
             canSwapShip = false;
@@ -310,8 +306,7 @@ public class PlayerController : MonoBehaviour
     }
 
     private void DebugKeyInputTests()
-    { 
-        
+    {  
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             shipData[shipDataIndex].runtimeWeaponLevel = 1;
@@ -329,31 +324,6 @@ public class PlayerController : MonoBehaviour
             shipData[shipDataIndex].runtimeWeaponLevel = 3;
             shipData[shipDataIndex].UpdateFunction.Invoke();
             Debug.Log("Ship's weapon level set to: " + shipData[shipDataIndex].runtimeWeaponLevel.ToString());
-        }
-
-        /*
-        if (Input.GetKeyDown(KeyCode.Tab))
-        {
-            Debug.Log("Destroying and replacing ship!");
-            shipData[shipDataIndex].EventCleanup();
-            shipDataIndex = (shipDataIndex + 1) % 2;
-            Destroy(currentShip);
-            Invoke("SetupShip", (1 / 60));    // need to delay creating a ship by ~1 frame otherwise we get nullref errors.
-        }
-        */
-        
-        if (Input.GetKeyDown(KeyCode.Z))
-        {
-            if (enableMovement)
-            {
-                Debug.Log("Movement Disabled!");
-                enableMovement = false;
-            }
-            else
-            {
-                Debug.Log("Movement Enabled!");
-                enableMovement = true;
-            }
         }
     }
 
@@ -389,7 +359,8 @@ public class PlayerController : MonoBehaviour
 
     IEnumerator getPowerup(ItemType itemType)
     {
-        yield return new WaitForEndOfFrame();                                           // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
+        // Need to delay incrementing the weapon level until EOF, to avoid multiple calls to coroutine.
+        yield return new WaitForEndOfFrame();                                           
         if (itemType == ItemType.WeaponUpgrade)
         {
             if (shipData[shipDataIndex].runtimeWeaponLevel != 3)
